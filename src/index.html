@@ -1,31 +1,141 @@
-<!doctype html><html>
-<script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Paper Visualization</title>
+		<link href="./output.css" rel="stylesheet" />
+		<script
+			src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1"
+			type="module"
+		></script>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+		/>
+		<script
+			defer
+			src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"
+		></script>
+		<script
+			defer
+			src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+		></script>
+		<!-- To make Markdown lists show markers inside the prose container and center prose content -->
+		<style>
+			/* Center all prose content (headings, paragraphs) */
+			.prose {
+				text-align: center;
+			}
+			/* Keep each child element centered block-level */
+			.prose > * {
+				margin-left: auto;
+				margin-right: auto;
+			}
+			/* Make lists appear as centered blocks but keep list items left-aligned */
+			.prose ul,
+			.prose ol {
+				display: inline-block;
+				text-align: left;
+				padding-left: 1.25rem; /* keep indent for bullets/numbers */
+			}
+			.prose ul {
+				list-style-type: disc;
+			}
+			.prose ol {
+				list-style-type: decimal;
+			}
+		</style>
+	</head>
 
-<head>  
-<meta charset="UTF-8">  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-     <link href="./output.css" rel="stylesheet">
-     </link>
-     
-</head>
-<header class="bg-gray-900">
-  <nav aria-label="Global" class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
-    <div class="flex lg:flex-1">
-    </div>
-    <el-popover-group class="hidden lg:flex lg:gap-x-12">
-      <a href="#" class="text-sm/6 font-semibold text-white">Test 1</a>
-      <a href="#" class="text-sm/6 font-semibold text-white">Test 2</a>
-      <a href="#" class="text-sm/6 font-semibold text-white">Test 3</a>
-    </el-popover-group>
-    <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-    </div>
-  </nav>
-</header>
+	<body class="bg-gray-50 text-gray-900">
+		<header class="bg-gray-900">
+			<nav
+				aria-label="Global"
+				class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
+			>
+				<div class="flex lg:flex-1">
+					<a href="#" class="text-white font-bold"
+						>Optimal shortcuts in geometric networks</a
+					>
+				</div>
+				<el-popover-group class="hidden lg:flex lg:gap-x-12">
+					<a href="#abstract" class="text-sm/6 font-semibold text-white"
+						>Abstract</a
+					>
+					<a href="#background" class="text-sm/6 font-semibold text-white"
+						>Background</a
+					>
+					<a href="#theory" class="text-sm/6 font-semibold text-white"
+						>Theory</a
+					>
+					<a href="#sketches" class="text-sm/6 font-semibold text-white"
+						>Sketches</a
+					>
+				</el-popover-group>
+				<div class="hidden lg:flex lg:flex-1 lg:justify-end"></div>
+			</nav>
+		</header>
 
-     
-<body>  
-<h1 class="text-3xl font-bold underline">    Hello world2!  
-</h1></body></html>
+		<main class="mx-auto max-w-4xl p-6 space-y-12">
+			<section id="abstract" class="text-center">
+				<h1 class="font-bold">Abstract</h1>
+				<div id="abstract-content" class="prose mx-auto text-center"></div>
+			</section>
 
+			<section id="background" class="text-center">
+				<h2 class="font-bold">Background</h2>
+				<div id="background-content" class="prose mx-auto text-center"></div>
+			</section>
 
+			<section id="theory" class="text-center">
+				<h2 class="font-bold">Theory & Explanation</h2>
+				<div id="theory-content" class="prose mx-auto text-center"></div>
+			</section>
 
+			<section id="sketches" class="space-y-6">
+				<h2 class="text-2xl font-semibold text-center">Interactive Sketches</h2>
+				<p class="text-sm text-gray-600 text-center">
+					Try the sketches below to explore visualizations related to the paper.
+					Click, drag, or use the controls inside each canvas.
+				</p>
+
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+					<div class="border rounded-lg bg-white p-4">
+						<h3 class="font-bold text-center">Sketch 1 — Particles</h3>
+						<div id="sketch1" style="width: 100%; height: 320px"></div>
+						<p class="mt-2 text-sm text-gray-600 text-center">
+							Click inside to create particles; they will bounce around.
+						</p>
+					</div>
+
+					<div class="border rounded-lg bg-white p-4">
+						<h3 class="font-bold text-center">Sketch 2 — Flow field</h3>
+						<div id="sketch2" style="width: 100%; height: 320px"></div>
+						<p class="mt-2 text-sm text-gray-600 text-center">
+							Move the mouse to change the flow direction.
+						</p>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<footer class="mt-12 p-6 text-center text-sm text-gray-600">
+			Built for the paper — interactive visualizations using p5.js
+		</footer>
+
+		<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.min.js"></script>
+
+		<script src="./scripts/sketch1.js"></script>
+		<script src="./scripts/sketch2.js"></script>
+		<script src="./scripts/main.js"></script>
+
+		<!-- keep these classes so Tailwind doesn't purge them (used inside markdown) -->
+		<div class="hidden" aria-hidden="true">
+			<span
+				class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm font-semibold text-lg"
+			></span>
+		</div>
+	</body>
+</html>

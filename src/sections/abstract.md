@@ -1,0 +1,5 @@
+# Abstract
+
+The goal of the paper _Computing optimal shortcuts for networks_ is to determine a segment that minimizes the distance between any two points of the network.
+<br></br>
+It focuses on a continuous setting, where all points in the network, not just the vertices, must be taken into account when computing and placing a shortcut. A polynomial time algorithm is introduced for this setting, and a discrete version of the problem, paired with an approximation algorithm, are introduced as well.

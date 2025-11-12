@@ -4,7 +4,7 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Paper Visualization</title>
-		<link href="./output.css" rel="stylesheet" />
+		<link href="src/output.css" rel="stylesheet" />
 		<script
 			src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1"
 			type="module"
@@ -23,16 +23,13 @@
 		></script>
 		<!-- To make Markdown lists show markers inside the prose container and center prose content -->
 		<style>
-			/* Center all prose content (headings, paragraphs) */
 			.prose {
 				text-align: center;
 			}
-			/* Keep each child element centered block-level */
 			.prose > * {
 				margin-left: auto;
 				margin-right: auto;
 			}
-			/* Make lists appear as centered blocks but keep list items left-aligned */
 			.prose ul,
 			.prose ol {
 				display: inline-block;
@@ -127,9 +124,9 @@
 		<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.min.js"></script>
 
-		<script src="./scripts/sketch1.js"></script>
-		<script src="./scripts/sketch2.js"></script>
-		<script src="./scripts/main.js"></script>
+		<script src="src/scripts/sketch1.js"></script>
+		<script src="src/scripts/sketch2.js"></script>
+		<script src="src/scripts/main.js"></script>
 
 		<!-- keep these classes so Tailwind doesn't purge them (used inside markdown) -->
 		<div class="hidden" aria-hidden="true">

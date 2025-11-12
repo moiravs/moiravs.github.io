@@ -61,5 +61,4 @@ async function loadSection({ id, url }) {
 
 document.addEventListener("DOMContentLoaded", () => {
 	sections.forEach(loadSection);
-	if (typeof initSketches === "function") initSketches();
 });

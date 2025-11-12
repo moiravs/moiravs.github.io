@@ -18,49 +18,28 @@
 	<script src="src/scripts/sketch1.js"></script>
 	<script src="src/scripts/sketch2.js"></script>
 	<script src="src/scripts/main.js"></script>
-	<style>
-		.prose {
-			text-align: center;
-		}
-
-		.prose>* {
-			margin-left: auto;
-			margin-right: auto;
-		}
-
-		.prose ul,
-		.prose ol {
-			display: inline-block;
-			text-align: left;
-			padding-left: 1.25rem;
-		}
-
-		.prose ul {
-			list-style-type: disc;
-		}
-
-		.prose ol {
-			list-style-type: decimal;
-		}
-	</style>
 </head>
 
-<body class="bg-gray-50 text-gray-900 items-center justify-center">
-	<header class="bg-gray-900">
-		<nav aria-label="Global" class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
-			<div class="flex lg:flex-1">
-				<a href="#" class="text-white font-bold">Optimal shortcuts in geometric networks</a>
-			</div>
-			<el-popover-group class="hidden lg:flex lg:gap-x-12">
-				<a href="#abstract" class="text-sm/6 font-semibold text-white">Abstract</a>
-				<a href="#background" class="text-sm/6 font-semibold text-white">Background</a>
-				<a href="#theory" class="text-sm/6 font-semibold text-white">Theory</a>
-				<a href="#sketches" class="text-sm/6 font-semibold text-white">Sketches</a>
-			</el-popover-group>
-			<div class="hidden lg:flex lg:flex-1 lg:justify-end"></div>
-		</nav>
-	</header>
-	<div class="flex justify-center items-center min-h-screen w-full">
+
+
+<body class="bg-gray-300 text-gray-900 flex items-center justify-center min-h-screen">
+
+
+	<div class="flex flex-col justify-center items-center min-h-screen w-full">
+		<header class="bg-gray-900 flex items-center justify-center h-16 w-full">
+			<nav aria-label="Global" class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
+				<div class="flex lg:flex-1">
+					<a href="#" class="text-white font-bold">Optimal shortcuts in geometric networks</a>
+				</div>
+				<el-popover-group class="hidden lg:flex lg:gap-x-12">
+					<a href="#abstract" class="text-sm/6 font-semibold text-white">Abstract</a>
+					<a href="#background" class="text-sm/6 font-semibold text-white">Background</a>
+					<a href="#theory" class="text-sm/6 font-semibold text-white">Theory</a>
+					<a href="#sketches" class="text-sm/6 font-semibold text-white">Sketches</a>
+				</el-popover-group>
+				<div class="hidden lg:flex lg:flex-1 lg:justify-end"></div>
+			</nav>
+		</header>
 		<main class="mx-auto max-w-4xl p-6 space-y-12 items-center">
 			<section id="abstract" class="text-center">
 				<h1 class="font-bold">Abstract</h1>
@@ -82,19 +61,19 @@
 				<p class="text-sm text-gray-600 text-center">
 				</p>
 
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+				<div class="grid grid-cols-1 md:grid-cols-1 gap-6">
 					<div class="border rounded-lg bg-white p-4">
 						<h3 class="font-bold text-center">Sketch 1 — Particles</h3>
 						<div class="max-w-4xl w-full justify-center items-center">
 							<h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Points Drawing with p5.js</h1>
 
-							<div class="bg-white rounded-lg shadow-lg p-6 mb-6 w-full max-w-2xl">
-								<div id="canvas-container" class="flex justify-center">
+							<div class="bg-white rounded-lg shadow-lg p-6 w-full">
+								<div id="canvas-container" class="flex flex-col justify-center w-full">
 									<!-- canvas will be inserted here by p5.js -->
 								</div>
 							</div>
 
-							<div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl">
+							<div class="bg-gray-300 rounded-lg shadow-lg p-6 w-full">
 								<p class="text-center text-gray-600 mb-4">Click on the canvas to add points. Press 'c'
 									to clear all
 									points.
@@ -127,17 +106,10 @@
 
 				</div>
 			</section>
-
-
-
 		</main>
 	</div>
 
 
-	<!-- keep these classes so Tailwind doesn't purge them (used inside markdown) -->
-	<div class="hidden" aria-hidden="true">
-		<span class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm font-semibold text-lg"></span>
-	</div>
 </body>
 
 </html>

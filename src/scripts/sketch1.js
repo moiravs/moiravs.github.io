@@ -1,7 +1,7 @@
 let points = [];
 
 function setup() {
-    const canvas = createCanvas(600, 400);
+    const canvas = createCanvas(windowWidth / 2, windowHeight /2);
     canvas.parent('canvas-container');
     canvas.style("border-radius", "12px")
     

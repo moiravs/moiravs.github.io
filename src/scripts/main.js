@@ -6,9 +6,9 @@ marked.setOptions({
 });
 
 const sections = [
-	{ id: "abstract-content", url: "sections/abstract.md" },
-	{ id: "theory-content", url: "sections/theory.md" },
-	{ id: "background-content", url: "sections/background.md" },
+	{ id: "abstract-content", url: "../../sections/abstract.md" },
+	{ id: "theory-content", url: "../../sections/theory.md" },
+	{ id: "background-content", url: "../../sections/background.md" },
 ];
 
 function stripLeadingHeading(md) {

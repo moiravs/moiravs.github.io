@@ -9,11 +9,18 @@
 	<link href="src/output.css" rel="stylesheet" />
 	<script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" />
+
+	<link rel="stylesheet" href="https://unpkg.com/@sakun/system.css" />
+	<!-- <link rel="stylesheet" href="css-pokemon-gameboy.css"> -->
 	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
 	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.min.js"></script>
 
+
+	<script src="src/scripts/sketch1.js"></script>
+	<script src="src/scripts/sketch2.js"></script>
+	<script src="src/scripts/main.js"></script>
 
 </head>
 
@@ -22,38 +29,36 @@
 <body class="bg-gray-300 text-gray-900 flex items-center justify-center min-h-screen">
 
 	<div class="flex flex-col justify-center items-center min-h-screen w-full">
-		<header class="bg-gray-900 flex items-center h-16 w-full">
-			<nav aria-label="Global" class="flex max-w-7xl items-center justify-between p-6 lg:px-8 mx-auto w-full">
-				<div class="flex-shrink-0">
-					<a href="#" class="text-white font-bold">Optimal shortcuts in geometric networks</a>
-				</div>
+		<div class="window w-full">
+			<div class="title-bar w-full text-left">
+				<h1 class="title">Optimal shortcuts in geometric networks</h1>
+			</div>
+			<div class="details-bar">
+				<a href="#abstract">Abstract</a>
+				<a href="#background">Background</a>
+				<a href="#theory">Theory</a>
+				<a href="#sketches">Sketches</a>
+			</div>
+		</div>
 
-				<el-popover-group class="hidden lg:flex lg:gap-x-12">
-					<a href="#abstract" class="text-sm/6 font-semibold text-white">Abstract</a>
-					<a href="#background" class="text-sm/6 font-semibold text-white">Background</a>
-					<a href="#theory" class="text-sm/6 font-semibold text-white">Theory</a>
-					<a href="#sketches" class="text-sm/6 font-semibold text-white">Sketches</a>
-				</el-popover-group>
-			</nav>
-		</header>
-		<main class="mx-auto max-w-4xl p-6 space-y-12 items-center">
-			<section id="abstract" class="text-center">
-				<h1 class="font-bold">Abstract</h1>
-				<div id="abstract-content" class="prose mx-auto text-center"></div>
+		<main class="standard-dialog max-w-4xl p-6 space-y-24 items-center">
+			<section id="abstract" class="text-left space-y-8">
+				<h2 class="text-3xl font-bold text-left">Abstract</h2>
+				<div id="abstract-content" class="text-left prose mx-auto text-center"></div>
 			</section>
 
-			<section id="background" class="text-center">
-				<h2 class="font-bold">Background</h2>
-				<div id="background-content" class="prose mx-auto text-center"></div>
+			<section id="background" class="text-left space-y-8">
+				<h2 class="text-3xl font-bold">Background</h2>
+				<p id="background-content" class="text-left prose mx-auto text-center "></p>
 			</section>
 
-			<section id="theory" class="text-center">
-				<h2 class="font-bold">Theory & Explanation</h2>
-				<div id="theory-content" class="prose mx-auto text-center"></div>
+			<section id="theory" class="text-left space-y-8">
+				<h2 class="text-3xl font-bold text-left">Theory & Explanation</h2>
+				<div id="theory-content" class="text-left prose mx-auto text-center"></div>
 			</section>
 
 			<section id="sketches" class="space-y-6">
-				<h2 class="text-2xl font-semibold text-center">Interactive Sketches</h2>
+				<h2 class="text-3xl font-semibold text-center text-left">Interactive Sketches</h2>
 				<p class="text-sm text-gray-600 text-center">
 				</p>
 
@@ -88,24 +93,24 @@
 										<h3 class="font-semibold text-green-800">Statistics</h3>
 										<ul class="text-sm text-green-700 mt-2">
 											<li>• Total points: <span id="point-count">0</span></li>
+
+											<li>• Diameter: <p style="display:inline" id="output">0</p> <span
+													id="point-count">
+												</span></li>
+
 										</ul>
 									</div>
 								</div>
 
 							</div>
 						</div>
-						<p class="mt-2 text-sm text-gray-600 text-center">
-							Click inside to create particles; they will bounce around.
-						</p>
 					</div>
 
 
 				</div>
 			</section>
 		</main>
-		<script src="src/scripts/sketch1.js"></script>
-		<script src="src/scripts/sketch2.js"></script>
-		<script src="src/scripts/main.js"></script>
+
 	</div>
 
 

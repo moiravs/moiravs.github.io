@@ -5,6 +5,10 @@ let width;
 
 let firstTime = true;
 
+function computeDiameterNetwork() {
+    document.getElementById("output").textContent = 4;
+}
+
 function setup() {
     updateCanvasSize()
 	const canvas = createCanvas(width, height);
@@ -101,6 +105,7 @@ function mousePressed() {
 		});
 		drawPoints();
 	}
+    computeDiameterNetwork();
 }
 
 function keyPressed() {

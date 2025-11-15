@@ -1,6 +1,9 @@
 {
-  "dependencies": {
-    "heap-js": "^2.7.1",
-    "tailwindcss": "^4.1.17"
-  }
+	"dependencies": {
+		"heap-js": "^2.7.1",
+		"tailwindcss": "^4.1.17"
+	},
+	"scripts": {
+		"start": "node src/algorithms/main.js"
+	}
 }

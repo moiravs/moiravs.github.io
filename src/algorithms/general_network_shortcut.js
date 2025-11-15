@@ -1,4 +1,4 @@
-import { NetworkShortcutUtils } from "./network_ds.js";
+import { Edge, Network, Vertex } from "./network_ds.js";
 import { Heap } from "heap-js";
 
 /**
@@ -115,7 +115,10 @@ class GeneralNetworkShortcut {
 		let heap = [[0, source]]; // min-heap of [distance, vertex]
 
 		while (heap) {
-			const { d, u } = Heap.pop(heap); // vertex with smallest distance
+			const top = heap.pop(); // vertex with smallest distance
+
+			if (!top) break;
+			const [d, u] = top;
 			if (d > distances.get(u)) {
 				continue;
 			}
@@ -141,5 +144,136 @@ class GeneralNetworkShortcut {
 	 * @param {Network} network
 	 * @returns {Map<Vertex, Map<Vertex, float>>} shortest paths between all vertex pairs
 	 */
-	static allPairsShortestPaths(network) {}
+	static allPairsShortestPaths(network) {
+		const allPaths = new Map();
+		for (const vertex of network.vertices) {
+			const distances = GeneralNetworkShortcut.dijkstra(network, vertex);
+			allPaths.set(vertex, distances);
+		}
+
+		return allPaths;
+	}
+
+	/**
+	 * Find all diametral pairs in the network, given all-pairs shortest paths.
+	 * @param {Network} network
+	 * @param {Map<Vertex, Map<Vertex, float>>} allPairsPaths
+	 * @returns {Tuple[[Tuple[Vertex, Vertex]], float]} list of diametral pairs
+	 */
+	static diametralPairs(network, allPairsPaths) {
+		let max_distance = 0;
+		const pairs = [];
+
+		const vertices = network.vertices;
+		for (let i = 0; i < vertices.length; i++) {
+			for (let j = i + 1; j < vertices.length; j++) {
+				const u = vertices[i];
+				const v = vertices[j];
+
+				const distancesToU = allPairsPaths.get(u);
+				const d = distancesToU.get(v);
+
+				if (d > max_distance) {
+					max_distance = d;
+					pairs.length = 0; // reset pairs list
+					pairs.push([u, v]);
+				} else if (d === max_distance) {
+					pairs.push([u, v]);
+				}
+			}
+		}
+
+		return [pairs, max_distance];
+	}
+
+	/**
+	 * Compute f_{w,z}^{alpha,beta} for candidate shortcut (p,q) relative to diametral pair (alpha,beta).
+	 * @param {Network} network
+	 * @param {Vertex} p
+	 * @param {Vertex} q
+	 * @param {[Vertex, Vertex]} diametralPair
+	 * @param {Map<Vertex, Map<Vertex, float>>} allPairsPaths
+	 * @returns {number}
+	 */
+	static computeShortcutFunction(network, p, q, diametralPair, allPairsPaths) {
+		const [alpha, beta] = diametralPair;
+
+		// Compute distances from alpha to p and from beta to q (d(alpha, p) and d(beta, q))
+		const apsp_alpha = allPairsPaths.get(alpha);
+		const apsp_beta = allPairsPaths.get(beta);
+
+		let min_d_alpha_vertex = Infinity;
+		let min_d_beta_vertex = Infinity;
+
+		for (const vertex of network.vertices) {
+			const d_alpha_vertex =
+				apsp_alpha.get(vertex) +
+				Vertex.euclideanDistance(vertex.coordinates, p.coordinates);
+			const d_beta_vertex =
+				apsp_beta.get(vertex) +
+				Vertex.euclideanDistance(vertex.coordinates, q.coordinates);
+
+			if (d_alpha_vertex < min_d_alpha_vertex) {
+				min_d_alpha_vertex = d_alpha_vertex;
+			}
+			if (d_beta_vertex < min_d_beta_vertex) {
+				min_d_beta_vertex = d_beta_vertex;
+			}
+		}
+
+		const shortcut_length = Vertex.euclideanDistance(
+			p.coordinates,
+			q.coordinates
+		);
+
+		return min_d_alpha_vertex + shortcut_length + min_d_beta_vertex;
+	}
+
+	/**
+	 *
+	 * @param {Network} network
+	 * @param {[Vertex, Vertex]} diametralPair
+	 * @returns {}
+	 */
+	static enumerateHourglassRegions(network, diametralPair) {
+		return;
+	}
+
+	/**
+	 *
+	 * @param {Network} network
+	 * @param {[Vertex, Vertex]} diametralPair
+	 * @param {} region,
+	 * @param {Map<Vertex, Map<Vertex, float>>} allPairsPaths
+	 * @returns {}
+	 */
+	static processHourglassRegion(network, diametralPair, region, allPairsPaths) {
+		return;
+	}
+
+	/**
+	 * Find the optimal shortcut (p,q) to add to the network minimizing the diameter.
+	 * @param {Network} network
+	 * @returns {[[Vertex, Vertex], number]} optimal shortcut (p,q) and resulting diameter
+	 */
+	static findOptimalShortcut(network) {
+		const allPairsPaths = GeneralNetworkShortcut.allPairsShortestPaths(network);
+
+		const diametralPairs = GeneralNetworkShortcut.diametralPairs(
+			network,
+			allPairsPaths
+		)[0];
+
+		const diameterInitial = GeneralNetworkShortcut.diametralPairs(
+			network,
+			allPairsPaths
+		)[1];
+		console.log(
+			`[i] Initial diameter: ${diameterInitial}, diametral pairs: ${JSON.stringify(
+				diametralPairs
+			)}`
+		);
+	}
 }
+
+export { GeneralNetworkShortcut, GeneralNetworkShortcutUtils };

@@ -10,6 +10,7 @@ const sections = [
 	{ id: "abstract-content", url: "../../sections/abstract.md" },
 	{ id: "theory-content", url: "../../sections/theory.md" },
 	{ id: "background-content", url: "../../sections/background.md" },
+	{ id: "conclusion-content", url: "../../sections/conclusion.md" },
 ];
 
 function stripLeadingHeading(md) {

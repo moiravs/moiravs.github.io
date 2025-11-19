@@ -8,7 +8,7 @@ This section is to give the necessary theoretical background on the concepts men
 
 
 <div align="center" class="my-8 center ">
-  <img class="rounded-lg border-2 w-full  max-w-lg border-double" src="../../sections/figures/diameter.png"  />
+  <img class="rounded-lg border-2 w-full  max-w-xs border-double" src="../../sections/figures/diameter.png"  />
   <caption class="m-px italic font-sans antialiased text-sm text-current mt-2 block text-center">Figure 3: The diameter of the network here is 3.</caption>
 </div>
 
@@ -17,8 +17,8 @@ This section is to give the necessary theoretical background on the concepts men
 
 
 <div align="center" class="my-8 center ">
-  <img class="rounded-lg border-2 w-full  max-w-lg border-double" src="../../sections/figures/highwaymodel.png"  />
-  <caption class="m-px italic font-sans antialiased text-sm text-current mt-2 block text-center">Figure 1: The highway model, with a shortcut in blue, that improves the diameter.(we should compute the diameter and show how it improves)</caption>
+  <img class="rounded-lg border-2 w-full  max-w-xs border-double" src="../../sections/figures/highwaymodel.png"  />
+  <caption class="m-px italic font-sans antialiased text-xs text-current mt-2 block text-center">Figure 1: The highway model, with a shortcut in blue, that improves the diameter.(we should compute the diameter and show how it improves)</caption>
 </div>
 
  

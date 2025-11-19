@@ -1,10 +1,21 @@
 let points = [];
+let shortcut = [];
 let gridSize = 40;
 
-let firstTime = true;
+let shortcutmode = false;
+let pathnetworks = false;
 
-function computeDiameterNetwork() {
+function computeDiameterNetworkSketch2() {
     document.getElementById("output").textContent = 4;
+}
+
+function switchShortcutMode() {
+	if (shortcutmode) {
+ 		shortcutmode = false;
+	} else {
+		shortcutmode = true;
+	}
+	print("lalaa");
 }
 
 function setup() {
@@ -43,6 +54,8 @@ function getCanvasSize() {
 }
 
 function drawGrid() {
+	stroke('black');
+
 	const s=getCanvasSize();
 	let width=s[0];
 	let height=s[1];
@@ -65,15 +78,31 @@ function draw() {
 
     drawGrid();
     drawPoints();
+	drawShortCut();
+	stroke('black');
+
     if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
         let x = Math.round(mouseX / gridSize) * gridSize;
         let y = Math.round(mouseY / gridSize) * gridSize;
         ellipse(x, y, 6, 6);
     }
+
+
+}
+
+
+function drawShortCut() {
+	stroke('magenta');
+	for (let pointNumber = 0; pointNumber < shortcut.length - 1; pointNumber++) {
+		fill(shortcut[pointNumber].color);
+		ellipse(shortcut[pointNumber].x, shortcut[pointNumber].y, shortcut[pointNumber].size, shortcut[pointNumber].size);
+        line(shortcut[pointNumber].x, shortcut[pointNumber].y, shortcut[pointNumber + 1].x, shortcut[pointNumber + 1].y)
+        
+	}
 }
 
 function drawPoints() {
-
+	stroke('black');
 	for (let pointNumber = 0; pointNumber < points.length - 1; pointNumber++) {
 		fill(points[pointNumber].color);
 		ellipse(points[pointNumber].x, points[pointNumber].y, points[pointNumber].size, points[pointNumber].size);
@@ -97,7 +126,15 @@ function mousePressed() {
 	if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
         let x = Math.round(mouseX / gridSize) * gridSize;
         let y = Math.round(mouseY / gridSize) * gridSize;
-
+		if (shortcutmode){
+		shortcut.push({
+			x: x,
+			y: y,
+			size: 6,
+			color: color(255, 0, 0),
+		});
+		drawPoints();
+		} else {
 		points.push({
 			x: x,
 			y: y,
@@ -105,14 +142,21 @@ function mousePressed() {
 			color: color(0, 0, 0),
 		});
 		drawPoints();
+		}
+
+
 	}
-    computeDiameterNetwork();
+    computeDiameterNetworkSketch2();
 }
 
 function keyPressed() {
 	if (key === "c" || key === "C") {
 		points = [];
+		shortcut = [];
 		drawPoints();
+		if (shortcutmode){
+			switchShortcutMode();
+		}
 	}
 }
 

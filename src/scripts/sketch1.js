@@ -1,7 +1,5 @@
 let points = [];
 let gridSize = 40;
-let height;
-let width;
 
 let firstTime = true;
 
@@ -10,7 +8,10 @@ function computeDiameterNetwork() {
 }
 
 function setup() {
-    updateCanvasSize()
+	const s=getCanvasSize();
+	let width=s[0];
+	let height=s[1];
+
 	const canvas = createCanvas(width, height);
 
 
@@ -21,27 +22,31 @@ function setup() {
 	drawPoints();
 	updatePointCount();
     drawGrid();
-  updateCanvasSize();
-  resizeCanvas(width, height);
-
 }
 
 function windowResized() {
   // Update canvas size when the container resizes
-  updateCanvasSize();
+  const s=getCanvasSize();
+  let width=s[0];
+  let height=s[1];
+
   resizeCanvas(width, height);
   redraw();
 }
 
-function updateCanvasSize() {
+function getCanvasSize() {
     // Get the exact dimensions of the container
     const container = document.getElementById('canvas-container').getBoundingClientRect();
     width = Math.floor(container.width);
     height = 400;
+	return [width, height];
 }
 
 function drawGrid() {
-
+	const s=getCanvasSize();
+	let width=s[0];
+	let height=s[1];
+	
 	strokeWeight(0.3);
 	for (let x = 0; x <= width; x += gridSize) {
 		line(x, 0, x, height);

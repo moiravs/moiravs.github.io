@@ -60,6 +60,13 @@ async function loadSection({ id, url }) {
 	}
 }
 
+async function loadAllSections() {
+  await Promise.all(sections.map(async (section) => {
+    await loadSection(section);
+    console.log(section.id+" loaded");
+  }));
+  windowResized()
+}
 document.addEventListener("DOMContentLoaded", () => {
-	sections.forEach(loadSection);
+	loadAllSections();
 });

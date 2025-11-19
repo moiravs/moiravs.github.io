@@ -1,13 +1,23 @@
-let points = [];
+class Sketch1 {
+	constructor() {
+		this.points = [];
 let shortcut = [];
-let gridSize = 40;
-
-let shortcutmode = false;
+		this.gridSize = 40;
+		this.shortcutmode = false;
 let pathnetworks = false;
 
-function computeDiameterNetworkSketch2() {
-    document.getElementById("output").textContent = 4;
-}
+		// bind methods so p5 global hooks can call them
+		this.setup = this.setup.bind(this);
+		this.draw = this.draw.bind(this);
+		this.mousePressed = this.mousePressed.bind(this);
+		this.keyPressed = this.keyPressed.bind(this);
+		this.windowResized = this.windowResized.bind(this);
+	}
+
+	computeDiameterNetworkSketch2() {
+		const out = document.getElementById("output");
+		if (out) out.textContent = 4;
+	}
 
 function switchShortcutMode() {
 	if (shortcutmode) {
@@ -18,58 +28,52 @@ function switchShortcutMode() {
 	print("lalaa");
 }
 
-function setup() {
-	const s=getCanvasSize();
-	let width=s[0];
-	let height=s[1];
+	getCanvasSize() {
+		const container = document.getElementById("canvas-container");
+		if (!container) return [600, 400];
+		const rect = container.getBoundingClientRect();
+		const w = Math.floor(rect.width);
+		const h = 400;
+		return [w, h];
+	}
 
-	const canvas = createCanvas(width, height);
+	setup() {
+		const s = this.getCanvasSize();
+		const w = s[0];
+		const h = s[1];
+		const canvas = createCanvas(w, h);
+		if (canvas && canvas.parent) canvas.parent("canvas-container");
+		if (canvas && canvas.style) canvas.style("border-radius", "12px");
+		background(240);
+		this.drawPoints();
+		this.updatePointCount();
+		this.drawGrid();
+	}
 
+	windowResized() {
+		const s = this.getCanvasSize();
+		const w = s[0];
+		const h = s[1];
+		resizeCanvas(w, h);
+		redraw();
+	}
 
-	canvas.parent("canvas-container");
-	canvas.style("border-radius", "12px");
-
-	background(240);
-	drawPoints();
-	updatePointCount();
-    drawGrid();
-}
-
-function windowResized() {
-  // Update canvas size when the container resizes
-  const s=getCanvasSize();
-  let width=s[0];
-  let height=s[1];
-
-  resizeCanvas(width, height);
-  redraw();
-}
-
-function getCanvasSize() {
-    // Get the exact dimensions of the container
-    const container = document.getElementById('canvas-container').getBoundingClientRect();
-    width = Math.floor(container.width);
-    height = 400;
-	return [width, height];
-}
-
-function drawGrid() {
+	drawGrid() {
 	stroke('black');
 
-	const s=getCanvasSize();
-	let width=s[0];
-	let height=s[1];
-	
-	strokeWeight(0.3);
-	for (let x = 0; x <= width; x += gridSize) {
-		line(x, 0, x, height);
-	}
+		const s = this.getCanvasSize();
+		const w = s[0];
+		const h = s[1];
 
-	for (let y = 0; y <= height; y += gridSize) {
-		line(0, y, width, y);
+		strokeWeight(0.3);
+		for (let x = 0; x <= w; x += this.gridSize) {
+			line(x, 0, x, h);
+		}
+		for (let y = 0; y <= h; y += this.gridSize) {
+			line(0, y, w, y);
+		}
+		strokeWeight(2);
 	}
-	strokeWeight(2);
-}
 
 
 
@@ -100,32 +104,50 @@ function drawShortCut() {
         
 	}
 }
+	draw() {
+		background(240);
+		this.drawGrid();
+		this.drawPoints();
 
-function drawPoints() {
-	stroke('black');
-	for (let pointNumber = 0; pointNumber < points.length - 1; pointNumber++) {
-		fill(points[pointNumber].color);
-		ellipse(points[pointNumber].x, points[pointNumber].y, points[pointNumber].size, points[pointNumber].size);
-        line(points[pointNumber].x, points[pointNumber].y, points[pointNumber + 1].x, points[pointNumber + 1].y)
-        
+		const s = this.getCanvasSize();
+		const w = s[0];
+		const h = s[1];
+		if (
+			typeof mouseX !== "undefined" &&
+			mouseX >= 0 &&
+			mouseX <= w &&
+			mouseY >= 0 &&
+			mouseY <= h
+		) {
+			let x = Math.round(mouseX / this.gridSize) * this.gridSize;
+			let y = Math.round(mouseY / this.gridSize) * this.gridSize;
+			ellipse(x, y, 6, 6);
+		}
 	}
 
-    if (points.length > 0){
-    ellipse(points[points.length - 1].x, points[points.length - 1].y, points[points.length - 1].size, points[points.length - 1].size);
-    }
-	updatePointCount();
-    drawGrid();
+	drawPoints() {
+	stroke('black');		for (let i = 0; i < Math.max(0, this.points.length - 1); i++) {
+			const p = this.points[i];
+			fill(p.color);
+			ellipse(p.x, p.y, p.size, p.size);
+			line(p.x, p.y, this.points[i + 1].x, this.points[i + 1].y);
+		}
 
-}
+		if (this.points.length > 0) {
+			const last = this.points[this.points.length - 1];
+			ellipse(last.x, last.y, last.size, last.size);
+		}
+		this.updatePointCount();
+	}
 
-
-
-
-
-function mousePressed() {
-	if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
-        let x = Math.round(mouseX / gridSize) * gridSize;
-        let y = Math.round(mouseY / gridSize) * gridSize;
+	mousePressed() {
+		const s = this.getCanvasSize();
+		const w = s[0];
+		const h = s[1];
+		if (typeof mouseX === "undefined") return;
+		if (mouseX >= 0 && mouseX <= w && mouseY >= 0 && mouseY <= h) {
+			let x = Math.round(mouseX / this.gridSize) * this.gridSize;
+			let y = Math.round(mouseY / this.gridSize) * this.gridSize;
 		if (shortcutmode){
 		shortcut.push({
 			x: x,
@@ -134,32 +156,44 @@ function mousePressed() {
 			color: color(255, 0, 0),
 		});
 		drawPoints();
-		} else {
-		points.push({
-			x: x,
-			y: y,
-			size: 6,
-			color: color(0, 0, 0),
-		});
-		drawPoints();
-		}
+		} else {			this.points.push({
+				x: x,
+				y: y,
+				size: 6,
+				color: color(0, 0, 0),
+			});
+			this.drawPoints();
+			}
 
 
 	}
-    computeDiameterNetworkSketch2();
-}
+		this.computeDiameterNetworkSketch2();
+	}
 
-function keyPressed() {
-	if (key === "c" || key === "C") {
-		points = [];
+	keyPressed() {
+		if (typeof key === "string" && (key === "c" || key === "C")) {
+			this.points = [];
 		shortcut = [];
-		drawPoints();
+			this.drawPoints();
 		if (shortcutmode){
 			switchShortcutMode();
 		}
+		}
+	}
+
+	updatePointCount() {
+		const el = document.getElementById("point-count");
+		if (el) el.textContent = this.points.length;
 	}
 }
 
-function updatePointCount() {
-	document.getElementById("point-count").textContent = points.length;
-}
+// create single global instance and hook p5 global functions
+const sketch1 = new Sketch1();
+window.sketch1 = sketch1;
+
+// p5 global mode hooks
+window.setup = sketch1.setup;
+window.draw = sketch1.draw;
+window.mousePressed = sketch1.mousePressed;
+window.keyPressed = sketch1.keyPressed;
+window.windowResized = sketch1.windowResized;

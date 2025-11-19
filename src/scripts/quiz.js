@@ -1,120 +1,137 @@
-// JavaScript Logic
-let currentQuestionIndex = 0;
-let numberQuestions;
+class Quiz {
+	constructor() {
+		this.currentQuestionIndex = 0;
+		this.numberQuestions = 0;
 
-function showQuestion(index) {
+		// bind instance methods for use as event handlers
+		this.showQuestion = this.showQuestion.bind(this);
+		this.lastQuestion = this.lastQuestion.bind(this);
+		this.resetNextQuestionButton = this.resetNextQuestionButton.bind(this);
+		this.nextQuestion = this.nextQuestion.bind(this);
+		this.prevQuestion = this.prevQuestion.bind(this);
+		this.getSelectedOption = this.getSelectedOption.bind(this);
+		this.submitQuiz = this.submitQuiz.bind(this);
+		this.restartQuiz = this.restartQuiz.bind(this);
 
-	const questions = 
-		document.querySelectorAll('.flex.flex-col.mb-6');
-    numberQuestions = questions.length;
-    console.log(numberQuestions);
-	questions.forEach((question, i) => {
-		question.style.display = i === index ? 'flex' : 'none';
-	});
-}
-
-function lastQuestion() {
-    const nextQuestion = document.getElementById('nextquestion');
-    nextQuestion.textContent="Submit !";
-    nextQuestion.className = 'bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md'
-    nextQuestion.onclick = submitQuiz
-}
-
-function resetNextQuestionButton() {
-    const nextQuestionButton = document.getElementById('nextquestion');
-    nextQuestionButton.textContent="Next";
-    nextQuestionButton.className = "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md";
-    nextQuestionButton.onclick = nextQuestion
-}
-
-function nextQuestion() {
-	currentQuestionIndex = 
-		
-			Math.min(currentQuestionIndex + 1, numberQuestions - 1);
-	showQuestion(currentQuestionIndex);
-    if (currentQuestionIndex == numberQuestions - 1){
-        lastQuestion();
-    }
-}
-
-function prevQuestion() {
-	currentQuestionIndex = 
-		
-			Math.max(currentQuestionIndex - 1, 0);
-	showQuestion(currentQuestionIndex);
-    resetNextQuestionButton();
-}
-
-function getSelectedOption(questionId) {
-	const selectedOption = 
-		
-			document.querySelector(`input[name=${questionId}]:checked`);
-	return selectedOption ? selectedOption.value : null;
-}
-
-function submitQuiz() {
-	// Your quiz submission logic here
-
-    document.getElementById('quizForm').classList.add('hidden');
-
-	const answers = {
-		q1: getSelectedOption('q1'),
-		q2: getSelectedOption('q2'),
-		// Add more questions as needed
-	};
-
-	// Calculate the score based on correct answers
-	let score = 0;
-	// Adjust correct answers based on your questions
-	if (answers.q1 === 'b') {
-		score += 10;
+		this._init();
 	}
-	if (answers.q2 === 'c') {
-		score += 10;
+
+	_init() {
+		const questions = document.querySelectorAll(".flex.flex-col.mb-6");
+		this.numberQuestions = questions.length;
+		const resultEl = document.getElementById("result");
+		if (resultEl) resultEl.classList.add("hidden");
+
+		// ensure next button uses instance methods (if present in DOM)
+		const nextBtn = document.getElementById("nextquestion");
+		if (nextBtn) nextBtn.onclick = this.nextQuestion;
+
+		const prevBtn = document.querySelector(
+			'[onclick="sketch1.prevQuestion()"], button[onclick="prevQuestion()"], #prevquestion'
+		);
+		// don't assume prev selector; HTML may call quiz.prevQuestion() directly
+
+		// show initial question
+		this.showQuestion(this.currentQuestionIndex);
 	}
-	
-	// Add more conditions for other questions
 
-	// Display result section
-	const resultSection = document.getElementById('result');
-	resultSection.classList.remove('hidden');
+	showQuestion(index) {
+		const questions = document.querySelectorAll(".flex.flex-col.mb-6");
+		this.numberQuestions = questions.length;
+		questions.forEach((question, i) => {
+			question.style.display = i === index ? "flex" : "none";
+		});
+	}
 
-	const scoreElement = document.getElementById('score');
-	scoreElement.textContent = 
-		`Score: ${score}/20`; // Assuming each question has 10 points
+	lastQuestion() {
+		const nextQuestion = document.getElementById("nextquestion");
+		if (!nextQuestion) return;
+		nextQuestion.textContent = "Submit !";
+		nextQuestion.className =
+			"bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md";
+		nextQuestion.onclick = this.submitQuiz;
+	}
 
-	const feedbackElement = 
-		document.getElementById('feedback');
-	// Customize feedback based on the score
-	if (score === 20) {
-		feedbackElement.textContent = 
-			'Congratulations! You did great!';
-	} else {
-		feedbackElement.textContent = 
-			'You can do better. Keep practicing.';
+	resetNextQuestionButton() {
+		const nextQuestionButton = document.getElementById("nextquestion");
+		if (!nextQuestionButton) return;
+		nextQuestionButton.textContent = "Next";
+		nextQuestionButton.className =
+			"bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md";
+		nextQuestionButton.onclick = this.nextQuestion;
+	}
+
+	nextQuestion() {
+		this.currentQuestionIndex = Math.min(
+			this.currentQuestionIndex + 1,
+			this.numberQuestions - 1
+		);
+		this.showQuestion(this.currentQuestionIndex);
+		if (this.currentQuestionIndex === this.numberQuestions - 1) {
+			this.lastQuestion();
+		}
+	}
+
+	prevQuestion() {
+		this.currentQuestionIndex = Math.max(this.currentQuestionIndex - 1, 0);
+		this.showQuestion(this.currentQuestionIndex);
+		this.resetNextQuestionButton();
+	}
+
+	getSelectedOption(questionId) {
+		// ensure the attribute value is quoted
+		const selectedOption = document.querySelector(
+			`input[name="${questionId}"]:checked`
+		);
+		return selectedOption ? selectedOption.value : null;
+	}
+
+	submitQuiz() {
+		const quizForm = document.getElementById("quizForm");
+		if (quizForm) quizForm.classList.add("hidden");
+
+		const answers = {
+			q1: this.getSelectedOption("q1"),
+			q2: this.getSelectedOption("q2"),
+			// extend as needed
+		};
+
+		let score = 0;
+		if (answers.q1 === "b") score += 10;
+		if (answers.q2 === "c") score += 10;
+
+		const resultSection = document.getElementById("result");
+		if (resultSection) resultSection.classList.remove("hidden");
+
+		const scoreElement = document.getElementById("score");
+		if (scoreElement) scoreElement.textContent = `Score: ${score}/20`;
+
+		const feedbackElement = document.getElementById("feedback");
+		if (feedbackElement) {
+			if (score === 20)
+				feedbackElement.textContent = "Congratulations! You did great!";
+			else feedbackElement.textContent = "You can do better. Keep practicing.";
+		}
+	}
+
+	restartQuiz() {
+		this.currentQuestionIndex = 0;
+		const resultSection = document.getElementById("result");
+		if (resultSection) resultSection.classList.add("hidden");
+		const quizForm = document.getElementById("quizForm");
+		if (quizForm) quizForm.classList.remove("hidden");
+		this.resetNextQuestionButton();
+
+		const radioButtons = document.querySelectorAll('input[type="radio"]');
+		radioButtons.forEach((button) => (button.checked = false));
+
+		this.showQuestion(this.currentQuestionIndex);
 	}
 }
 
-// Initially hide the result section
-document.getElementById('result').classList.add('hidden');
+// create instance and expose as global for HTML access: quiz.nextQuestion(), quiz.restartQuiz(), etc.
+const quiz = new Quiz();
+window.quiz = quiz;
 
 // Initially show the first question
 showQuestion(currentQuestionIndex);
-
-function restartQuiz() {
-	// Reset question index
-	currentQuestionIndex = 0;
-	// Hide result section
-	document.getElementById('result').classList.add('hidden');
-    document.getElementById('quizForm').classList.remove('hidden');
-    resetNextQuestionButton();
-
-
-	// Clear selected options
-	const radioButtons = 
-		document.querySelectorAll('input[type="radio"]');
-	radioButtons.forEach(button => button.checked = false);
-
-	// Show the first question
-	showQuestion(currentQuestionIndex);
-}

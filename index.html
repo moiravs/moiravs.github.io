@@ -36,7 +36,7 @@
 				<a href="#abstract">Abstract</a>
 				<a href="#background">Background</a>
 				<a href="#theory">Theory</a>
-				<a href="#sketches">Sketches</a>
+				<a href="#sketches">Sketches</a><a href="#sketches">Quiz</a>
 			</div>
 		</div>
 
@@ -74,7 +74,7 @@
 							</div>
 
 							<div class="bg-gray-300 rounded-lg shadow-lg p-6 w-full">
-								<p class="text-center text-gray-600 mb-4">Click on the canvas to add points. Press 'c'
+								<p class="text-center text-gray-600 mb-6">Click on the canvas to add points. Press 'c'
 									to clear all
 									points.
 								</p>
@@ -107,6 +107,112 @@
 
 
 				</div>
+			</section>
+
+
+
+			<section id="quiz" class="space-y-6">
+				<h2 class="text-3xl font-semibold text-center text-left">Quiz</h2>
+				<div id="showresultcase" class="max-w-md mx-auto bg-white p-8 
+				rounded-md shadow-md" style="border: 1px solid black;">
+					<div id="result" class="mt-8 hidden">
+						<h2 class="text-2xl font-bold mb-6 text-center">
+							Quiz Result
+						</h2>
+						<p id="score" class="text-lg 
+													font-semibold mb-2 
+													text-center">
+						</p>
+						<p id="feedback" class="text-gray-700 text-center"></p>
+					</div>
+
+					<form id="quizForm" class="space-y-4">
+						<!-- Question 1 -->
+						<div class="flex flex-col mb-6">
+							<label for="q1" class="text-lg text-gray-800 mb-2">
+								1. Is this graph a planar graph ?
+								<div align="center" class="my-8 center ">
+									<img class="rounded-lg border-2 w-full  max-w-sm border-double"
+										src="sections/figures/quizq1.png" />
+								</div>
+							</label>
+							<div class="flex items-center space-x-4">
+								<input type="radio" id="q1a" name="q1" value="a" class="mr-2" required>
+								<label for="q1a" class="text-gray-700">
+									a) Yes
+								</label>
+							</div>
+							<div class="flex items-center space-x-4">
+								<input type="radio" id="q1b" name="q1" value="b" class="mr-2" required>
+								<label for="q1b" class="text-gray-700">
+									b) No
+								</label>
+							</div>
+
+						</div>
+
+						<!-- Question 2 -->
+						<div class="flex flex-col mb-6">
+							<label for="q2" class="text-lg text-gray-800 mb-2">
+								2. What is the diameter of the following graph:
+								<div align="center" class="my-8 center ">
+									<img class="rounded-lg border-2 w-full  max-w-sm border-double"
+										src="sections/figures/quizq2.png" />
+								</div>
+							</label>
+							<div class="flex items-center space-x-4">
+								<input type="radio" id="q2a" name="q2" value="a" class="mr-2" required>
+								<label for="q2a" class="text-gray-700">
+									a) 2
+								</label>
+							</div>
+							<div class="flex items-center space-x-4">
+								<input type="radio" id="q2b" name="q2" value="b" class="mr-2" required>
+								<label for="q2b" class="text-gray-700">
+									b) 3
+								</label>
+							</div>
+							<div class="flex items-center space-x-4">
+								<input type="radio" id="q2c" name="q2" value="c" class="mr-2" required>
+								<label for="q2c" class="text-gray-700">
+									c) 4
+								</label>
+							</div>
+							<div class="flex items-center space-x-4">
+								<input type="radio" id="q2d" name="q2" value="d" class="mr-2" required>
+								<label for="q2d" class="text-gray-700">
+									d) 5
+								</label>
+							</div>
+						</div>
+
+						<hr>
+
+						<!-- Navigation Buttons -->
+						<div class="flex justify-between">
+							<button type="button" onclick="prevQuestion()" class="bg-blue-500 hover:bg-blue-600 
+						text-white px-2 py-1 rounded-md">
+								Previous
+							</button>
+							<button id="nextquestion" type="button" onclick="nextQuestion()"
+								class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
+								Next
+							</button>
+						</div>
+						<hr>
+
+
+					</form>
+					<button type="button" onclick="restartQuiz()" class="bg-red-500 text-white px-3 py-2 
+													rounded-md mt-4">
+						Restart Quiz
+					</button>
+
+				</div>
+
+				<script src="src/scripts/quiz.js">
+
+				</script>
 			</section>
 		</main>
 

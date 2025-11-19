@@ -70,10 +70,6 @@ function draw() {
         let y = Math.round(mouseY / gridSize) * gridSize;
         ellipse(x, y, 6, 6);
     }
-    
-    //updateCanvasSize();
-    //resizeCanvas(width, height);
-
 }
 
 function drawPoints() {

@@ -252,7 +252,53 @@ class GeneralNetworkShortcut {
 	}
 
 	/**
-	 * Find the optimal shortcut (p,q) to add to the network minimizing the diameter.
+	 * Compute the diameter of the network after adding a shortcut (p, q) between vertices (for discrete version).
+	 * For any 2 vertices a,b : d'(a,b) = min(d(a,b), d(a,p) + d(p,q) + d(q,b), d(a,q) + d(q,p) + d(p,b))
+	 *
+	 * @param {Network} network
+	 * @param {Map<Vertex, Map<Vertex, float>>} allPairsPaths
+	 * @param {Vertex} p
+	 * @param {Vertex} q
+	 * @returns {number} diameter after adding shortcut (p,q)
+	 */
+	static computeDiameterWithShortcut(network, allPairsPaths, p, q) {
+		const vertices = network.vertices;
+		const pq_distance = Vertex.euclideanDistance(p.coordinates, q.coordinates);
+
+		let max_distance = 0;
+
+		for (let i = 0; i < vertices.length; i++) {
+			const a = vertices[i];
+			const distancesFromA = allPairsPaths.get(a);
+
+			for (let j = i + 1; j < vertices.length; j++) {
+				const b = vertices[j];
+				const d_ab = distancesFromA.get(b);
+
+				const distancesFromP = allPairsPaths.get(p);
+				const distancesFromQ = allPairsPaths.get(q);
+
+				const dist_a_p = distancesFromA.get(p);
+				const dist_a_q = distancesFromA.get(q);
+
+				const dist_p_b = distancesFromP.get(b);
+				const dist_q_b = distancesFromQ.get(b);
+
+				const d_via_pq = dist_a_p + pq_distance + dist_q_b;
+				const d_via_qp = dist_a_q + pq_distance + dist_p_b;
+
+				const best = Math.min(d_ab, d_via_pq, d_via_qp);
+				if (best > max_distance) {
+					max_distance = best;
+				}
+			}
+		}
+
+		return max_distance;
+	}
+
+	/**
+	 * Find the optimal shortcut (p,q) to add to the network minimizing the diameter (discrete setting)
 	 * @param {Network} network
 	 * @returns {[[Vertex, Vertex], number]} optimal shortcut (p,q) and resulting diameter
 	 */
@@ -273,6 +319,55 @@ class GeneralNetworkShortcut {
 				diametralPairs
 			)}`
 		);
+
+		const vertices = network.vertices;
+
+		const adjacency = new Map();
+		for (const vertex of vertices) {
+			adjacency.set(vertex, new Set()); // we build adjacency sets to not propose already proposed shortcuts
+		}
+
+		for (const edge of network.edges) {
+			const [u, v] = edge.vertices;
+			adjacency.get(u).add(v);
+			adjacency.get(v).add(u);
+		}
+
+		let best_shortcut = null;
+		let best_diameter = diameterInitial;
+
+		// we try all pairs of vertices (unordered) that are not already connected by an edge
+		for (let i = 0; i < vertices.length; i++) {
+			for (let j = i + 1; j < vertices.length; j++) {
+				const p = vertices[i];
+				const q = vertices[j];
+
+				if (adjacency.get(p).has(q)) continue;
+
+				const candidateDiameter =
+					GeneralNetworkShortcut.computeDiameterWithShortcut(
+						network,
+						allPairsPaths,
+						p,
+						q
+					);
+
+				if (candidateDiameter < best_diameter) {
+					best_diameter = candidateDiameter;
+					best_shortcut = [p, q];
+				}
+			}
+		}
+
+		if (best_shortcut === null) {
+			console.log("[i] No shortcut found that improves the diameter.");
+			return null;
+		} else {
+			console.log(
+				`[i] Best shortcut found between vertices ${best_shortcut[0].id} and ${best_shortcut[1].id} with resulting diameter ${best_diameter}.`
+			);
+			return [best_shortcut, best_diameter];
+		}
 	}
 }
 

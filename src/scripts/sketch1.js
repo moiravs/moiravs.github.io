@@ -1,10 +1,10 @@
 class Sketch1 {
 	constructor() {
 		this.points = [];
-let shortcut = [];
+		this.shortcut = [];
 		this.gridSize = 40;
 		this.shortcutmode = false;
-let pathnetworks = false;
+		this.pathnetworks = false;
 
 		// bind methods so p5 global hooks can call them
 		this.setup = this.setup.bind(this);
@@ -19,14 +19,13 @@ let pathnetworks = false;
 		if (out) out.textContent = 4;
 	}
 
-function switchShortcutMode() {
-	if (shortcutmode) {
- 		shortcutmode = false;
-	} else {
-		shortcutmode = true;
+	switchShortcutMode() {
+		if (shortcutmode) {
+			shortcutmode = false;
+		} else {
+			shortcutmode = true;
+		}
 	}
-	print("lalaa");
-}
 
 	getCanvasSize() {
 		const container = document.getElementById("canvas-container");
@@ -77,33 +76,20 @@ function switchShortcutMode() {
 
 
 
-function draw() {
-	background(240);
-
-    drawGrid();
-    drawPoints();
-	drawShortCut();
-	stroke('black');
-
-    if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
-        let x = Math.round(mouseX / gridSize) * gridSize;
-        let y = Math.round(mouseY / gridSize) * gridSize;
-        ellipse(x, y, 6, 6);
-    }
 
 
-}
 
-
-function drawShortCut() {
-	stroke('magenta');
-	for (let pointNumber = 0; pointNumber < shortcut.length - 1; pointNumber++) {
-		fill(shortcut[pointNumber].color);
-		ellipse(shortcut[pointNumber].x, shortcut[pointNumber].y, shortcut[pointNumber].size, shortcut[pointNumber].size);
-        line(shortcut[pointNumber].x, shortcut[pointNumber].y, shortcut[pointNumber + 1].x, shortcut[pointNumber + 1].y)
-        
+	drawShortCut() {
+		stroke('magenta');
+		for (let pointNumber = 0; pointNumber < shortcut.length - 1; pointNumber++) {
+			fill(shortcut[pointNumber].color);
+			ellipse(shortcut[pointNumber].x, shortcut[pointNumber].y, shortcut[pointNumber].size, shortcut[pointNumber].size);
+			line(shortcut[pointNumber].x, shortcut[pointNumber].y, shortcut[pointNumber + 1].x, shortcut[pointNumber + 1].y)
+			
+		}
 	}
-}
+
+
 	draw() {
 		background(240);
 		this.drawGrid();

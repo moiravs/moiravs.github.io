@@ -19,6 +19,14 @@
 	<script src="src/scripts/sketch1.js"></script>
 	<script src="src/scripts/sketch2.js"></script>
 	<script src="src/scripts/main.js"></script>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/default.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+
+	<!-- and it's easy to individually load additional languages -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/go.min.js"></script>
+
+	<script>hljs.highlightAll();</script>
 </head>
 
 <body class="bg-gray-300 text-gray-900 flex items-center justify-center min-h-screen">
@@ -49,6 +57,16 @@
 			<section id="theory" class="text-left space-y-8">
 				<h2 class="text-3xl font-bold text-left">Theory & Explanation</h2>
 				<div id="theory-content" class="text-left prose mx-auto text-center"></div>
+			</section>
+
+			<section id="generalnetworks" class="text-left space-y-8">
+				<h2 class="text-3xl font-bold">General Networks</h2>
+				<p id="generalnetworks-content" class="text-left prose mx-auto text-center"></p>
+			</section>
+
+			<section id="pathnetworks" class="text-left space-y-8">
+				<h2 class="text-3xl font-bold text-left">Path networks</h2>
+				<div id="pathnetworks-content" class="text-left prose mx-auto text-center"></div>
 			</section>
 
 			<section id="conclusion" class="text-left space-y-8">

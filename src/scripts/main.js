@@ -10,6 +10,8 @@ const sections = [
 	{ id: "abstract-content", url: "../../sections/abstract.md" },
 	{ id: "theory-content", url: "../../sections/theory.md" },
 	{ id: "background-content", url: "../../sections/background.md" },
+	{ id: "pathnetworks-content", url: "../../sections/pathnetworks.md" },
+	{ id: "generalnetworks-content", url: "../../sections/generalnetworks.md" },
 	{ id: "conclusion-content", url: "../../sections/conclusion.md" },
 ];
 

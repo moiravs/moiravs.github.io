@@ -28,7 +28,7 @@ const s2 = (sketch) => {
   };
 
   const drawGrid = () => {
-    sketch.stroke('black');
+   
     const s = getCanvasSize();
     const w = s[0];
     const h = s[1];
@@ -52,18 +52,21 @@ const s2 = (sketch) => {
   };
 
   const drawPoints = () => {
-    sketch.stroke('black');
+    
     for (let i = 0; i < Math.max(0, points.length - 1); i++) {
       const p = points[i];
       sketch.fill(p.color);
       sketch.ellipse(p.x, p.y, p.size, p.size);
-      sketch.line(p.x, p.y, points[i + 1].x, points[i + 1].y);
+      sketch.line(p.x, p.y, points[i + 1 % points.length].x, points[i + 1 % points.length].y);
     }
 
+    sketch.stroke('blue');
     if (points.length > 0) {
       const last = points[points.length - 1];
       sketch.ellipse(last.x, last.y, last.size, last.size);
     }
+    sketch.stroke('black');
+
     updatePointCount();
   };
 
@@ -105,8 +108,9 @@ const s2 = (sketch) => {
     sketch.background(240);
     drawGrid();
     drawPoints();
+	sketch.stroke('magenta');
     drawShortCut();
-
+	sketch.stroke("black");
     if (
       typeof sketch.mouseX !== "undefined" &&
       sketch.mouseX >= 0 &&
@@ -136,12 +140,17 @@ const s2 = (sketch) => {
           color: sketch.color(255, 0, 0),
         });
       } else {
-        points.push({
-          x: x,
-          y: y,
-          size: 6,
-          color: sketch.color(0, 0, 0),
-        });
+		const existingPoint = points.find(point => point.x === x && point.y === y);
+		if (!existingPoint) {
+				points.push({
+				x: x,
+				y: y,
+				size: 6,
+				color: sketch.color(0, 0, 0),
+				});
+			} else {
+
+			}
       }
     }
     computeDiameterNetworkSketch2();

@@ -68,7 +68,7 @@ async function loadAllSections() {
     await loadSection(section);
     console.log(section.id+" loaded");
   }));
-  windowResized()
+
 }
 
 document.addEventListener("DOMContentLoaded", () => {

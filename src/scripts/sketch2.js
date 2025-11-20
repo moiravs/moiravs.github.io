@@ -1,165 +1,162 @@
-let points = [];
-let shortcut = [];
-let gridSize = 40;
+const s2 = (sketch) => {
+  let points = [];
+  let shortcut = [];
+  let gridSize = 40;
+  let shortcutmode = false;
+  let width;
+  let height;
 
-let shortcutmode = false;
-let pathnetworks = false;
-
-function computeDiameterNetworkSketch2() {
-    document.getElementById("output").textContent = 4;
-}
-
-function switchShortcutMode() {
-	if (shortcutmode) {
- 		shortcutmode = false;
-	} else {
-		shortcutmode = true;
-	}
-	print("lalaa");
-}
-
-function setup() {
-	const s=getCanvasSize();
-	let width=s[0];
-	let height=s[1];
-
-	const canvas = createCanvas(width, height);
-
-
-	canvas.parent("canvas-container");
-	canvas.style("border-radius", "12px");
-
-	background(240);
-	drawPoints();
-	updatePointCount();
+  sketch.setup = () => {
+    const s = getCanvasSize();
+    const w = s[0];
+    const h = s[1];
+    const canvas = sketch.createCanvas(w, h);
+    if (canvas && canvas.parent) canvas.parent("canvas-container2");
+    if (canvas && canvas.style) canvas.style("border-radius", "12px");
+    sketch.background(240);
+    drawPoints();
+    updatePointCount();
     drawGrid();
-}
+  };
 
-function windowResized() {
-  // Update canvas size when the container resizes
-  const s=getCanvasSize();
-  let width=s[0];
-  let height=s[1];
+  sketch.windowResized = () => {
+    const s = getCanvasSize();
+    const w = s[0];
+    const h = s[1];
+    sketch.resizeCanvas(w, h);
+    sketch.redraw();
+  };
 
-  resizeCanvas(width, height);
-  redraw();
-}
+  const drawGrid = () => {
+    sketch.stroke('black');
+    const s = getCanvasSize();
+    const w = s[0];
+    const h = s[1];
+    sketch.strokeWeight(0.3);
+    for (let x = 0; x <= w; x += gridSize) {
+      sketch.line(x, 0, x, h);
+    }
+    for (let y = 0; y <= h; y += gridSize) {
+      sketch.line(0, y, w, y);
+    }
+    sketch.strokeWeight(2);
+  };
 
-function getCanvasSize() {
-    // Get the exact dimensions of the container
-    const container = document.getElementById('canvas-container').getBoundingClientRect();
-    width = Math.floor(container.width);
-    height = 400;
-	return [width, height];
-}
+  const drawShortCut = () => {
+    sketch.stroke('magenta');
+    for (let pointNumber = 0; pointNumber < shortcut.length - 1; pointNumber++) {
+      sketch.fill(shortcut[pointNumber].color);
+      sketch.ellipse(shortcut[pointNumber].x, shortcut[pointNumber].y, shortcut[pointNumber].size, shortcut[pointNumber].size);
+      sketch.line(shortcut[pointNumber].x, shortcut[pointNumber].y, shortcut[pointNumber + 1].x, shortcut[pointNumber + 1].y);
+    }
+  };
 
-function drawGrid() {
-	stroke('black');
+  const drawPoints = () => {
+    sketch.stroke('black');
+    for (let i = 0; i < Math.max(0, points.length - 1); i++) {
+      const p = points[i];
+      sketch.fill(p.color);
+      sketch.ellipse(p.x, p.y, p.size, p.size);
+      sketch.line(p.x, p.y, points[i + 1].x, points[i + 1].y);
+    }
 
-	const s=getCanvasSize();
-	let width=s[0];
-	let height=s[1];
-	
-	strokeWeight(0.3);
-	for (let x = 0; x <= width; x += gridSize) {
-		line(x, 0, x, height);
-	}
+    if (points.length > 0) {
+      const last = points[points.length - 1];
+      sketch.ellipse(last.x, last.y, last.size, last.size);
+    }
+    updatePointCount();
+  };
 
-	for (let y = 0; y <= height; y += gridSize) {
-		line(0, y, width, y);
-	}
-	strokeWeight(2);
-}
+  const updatePointCount = () => {
+    const el = document.getElementById("point-count2");
+    if (el) el.textContent = points.length;
+  };
 
+  const getCanvasSize = () => {
+    const container = document.getElementById("canvas-container2");
+    if (!container) return [600, 400];
+    const rect = container.getBoundingClientRect();
+    const w = Math.floor(rect.width);
+    const h = 400;
+    return [w, h];
+  };
 
+  const computeDiameterNetworkSketch2 = () => {
+    const out = document.getElementById("output2");
+    if (out) out.textContent = 4;
+  };
 
-function draw() {
-	background(240);
+  sketch.switchShortcutMode = () => {
+    if (shortcutmode) {
+      shortcutmode = false;
+    } else {
+      shortcutmode = true;
+    }
+  };
 
+  sketch.draw = () => {
+    const s = getCanvasSize();
+    const w = s[0];
+    const h = s[1];
+    if (width != w && height != h) {
+      sketch.resizeCanvas(w, h);
+    }
+
+    sketch.background(240);
     drawGrid();
     drawPoints();
-	drawShortCut();
-	stroke('black');
+    drawShortCut();
 
-    if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
-        let x = Math.round(mouseX / gridSize) * gridSize;
-        let y = Math.round(mouseY / gridSize) * gridSize;
-        ellipse(x, y, 6, 6);
+    if (
+      typeof sketch.mouseX !== "undefined" &&
+      sketch.mouseX >= 0 &&
+      sketch.mouseX <= w &&
+      sketch.mouseY >= 0 &&
+      sketch.mouseY <= h
+    ) {
+      let x = Math.round(sketch.mouseX / gridSize) * gridSize;
+      let y = Math.round(sketch.mouseY / gridSize) * gridSize;
+      sketch.ellipse(x, y, 6, 6);
     }
+  };
 
-
-}
-
-
-function drawShortCut() {
-	stroke('magenta');
-	for (let pointNumber = 0; pointNumber < shortcut.length - 1; pointNumber++) {
-		fill(shortcut[pointNumber].color);
-		ellipse(shortcut[pointNumber].x, shortcut[pointNumber].y, shortcut[pointNumber].size, shortcut[pointNumber].size);
-        line(shortcut[pointNumber].x, shortcut[pointNumber].y, shortcut[pointNumber + 1].x, shortcut[pointNumber + 1].y)
-        
-	}
-}
-
-function drawPoints() {
-	stroke('black');
-	for (let pointNumber = 0; pointNumber < points.length - 1; pointNumber++) {
-		fill(points[pointNumber].color);
-		ellipse(points[pointNumber].x, points[pointNumber].y, points[pointNumber].size, points[pointNumber].size);
-        line(points[pointNumber].x, points[pointNumber].y, points[pointNumber + 1].x, points[pointNumber + 1].y)
-        
-	}
-
-    if (points.length > 0){
-    ellipse(points[points.length - 1].x, points[points.length - 1].y, points[points.length - 1].size, points[points.length - 1].size);
+  sketch.mousePressed = () => {
+    const s = getCanvasSize();
+    const w = s[0];
+    const h = s[1];
+    if (typeof sketch.mouseX === "undefined") return;
+    if (sketch.mouseX >= 0 && sketch.mouseX <= w && sketch.mouseY >= 0 && sketch.mouseY <= h) {
+      let x = Math.round(sketch.mouseX / gridSize) * gridSize;
+      let y = Math.round(sketch.mouseY / gridSize) * gridSize;
+      if (shortcutmode) {
+        shortcut.push({
+          x: x,
+          y: y,
+          size: 6,
+          color: sketch.color(255, 0, 0),
+        });
+      } else {
+        points.push({
+          x: x,
+          y: y,
+          size: 6,
+          color: sketch.color(0, 0, 0),
+        });
+      }
     }
-	updatePointCount();
-    drawGrid();
-
-}
-
-
-
-
-
-function mousePressed() {
-	if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
-        let x = Math.round(mouseX / gridSize) * gridSize;
-        let y = Math.round(mouseY / gridSize) * gridSize;
-		if (shortcutmode){
-		shortcut.push({
-			x: x,
-			y: y,
-			size: 6,
-			color: color(255, 0, 0),
-		});
-		drawPoints();
-		} else {
-		points.push({
-			x: x,
-			y: y,
-			size: 6,
-			color: color(0, 0, 0),
-		});
-		drawPoints();
-		}
-
-
-	}
     computeDiameterNetworkSketch2();
-}
+  };
 
-function keyPressed() {
-	if (key === "c" || key === "C") {
-		points = [];
-		shortcut = [];
-		drawPoints();
-		if (shortcutmode){
-			switchShortcutMode();
-		}
-	}
-}
+  sketch.keyPressed = () => {
+    if (typeof sketch.key === "string" && (sketch.key === "c" || sketch.key === "C")) {
+      points = [];
+      shortcut = [];
+      drawPoints();
+      if (shortcutmode) {
+        sketch.switchShortcutMode();
+      }
+    }
+  };
+};
 
-function updatePointCount() {
-	document.getElementById("point-count").textContent = points.length;
-}
+let sketch2 = new p5(s2, "canvas-container2");

@@ -134,4 +134,4 @@ const quiz = new Quiz();
 window.quiz = quiz;
 
 // Initially show the first question
-showQuestion(currentQuestionIndex);
+quiz.showQuestion(quiz.currentQuestionIndex);

@@ -6,6 +6,15 @@ const s2 = (sketch) => {
   let width;
   let height;
 
+  class Point {
+    constructor(x, y, color, size = 6) {
+      this.x = x;
+      this.y = y;
+      this.color = color;
+      this.size = size;
+    }
+  }
+
   sketch.setup = () => {
     const s = getCanvasSize();
     const w = s[0];
@@ -28,7 +37,6 @@ const s2 = (sketch) => {
   };
 
   const drawGrid = () => {
-   
     const s = getCanvasSize();
     const w = s[0];
     const h = s[1];
@@ -46,24 +54,23 @@ const s2 = (sketch) => {
     sketch.stroke('magenta');
     for (let pointNumber = 0; pointNumber < shortcut.length - 1; pointNumber++) {
       sketch.fill(shortcut[pointNumber].color);
-      sketch.ellipse(shortcut[pointNumber].x, shortcut[pointNumber].y, shortcut[pointNumber].size, shortcut[pointNumber].size);
-      sketch.line(shortcut[pointNumber].x, shortcut[pointNumber].y, shortcut[pointNumber + 1].x, shortcut[pointNumber + 1].y);
+      sketch.ellipse(shortcut[pointNumber].x * gridSize, shortcut[pointNumber].y * gridSize, shortcut[pointNumber].size, shortcut[pointNumber].size);
+      sketch.line(shortcut[pointNumber].x * gridSize, shortcut[pointNumber].y * gridSize, shortcut[pointNumber + 1].x * gridSize, shortcut[pointNumber + 1].y * gridSize);
     }
   };
 
   const drawPoints = () => {
-    
     for (let i = 0; i < Math.max(0, points.length - 1); i++) {
       const p = points[i];
       sketch.fill(p.color);
-      sketch.ellipse(p.x, p.y, p.size, p.size);
-      sketch.line(p.x, p.y, points[i + 1 % points.length].x, points[i + 1 % points.length].y);
+      sketch.ellipse(p.x * gridSize, p.y * gridSize, p.size, p.size);
+      sketch.line(p.x * gridSize, p.y * gridSize, points[(i + 1) % points.length].x * gridSize, points[(i + 1) % points.length].y * gridSize);
     }
 
     sketch.stroke('blue');
     if (points.length > 0) {
       const last = points[points.length - 1];
-      sketch.ellipse(last.x, last.y, last.size, last.size);
+      sketch.ellipse(last.x * gridSize, last.y * gridSize, last.size, last.size);
     }
     sketch.stroke('black');
 
@@ -85,60 +92,134 @@ const s2 = (sketch) => {
   };
 
   const computeDiameterNetworkSketch2 = () => {
-    const out = document.getElementById("output2");
-	if (points.length > 1) {
-    if (out) out.textContent = points.length - 1;
+    const diameterOutput = document.getElementById("output2");
+    if (points.length > 1) {
+      let diameterPath = calculateperimeter(points, false);
+      if (diameterOutput) diameterOutput.textContent = Math.round((diameterPath + Number.EPSILON) * 100) / 100
+    } else {
+      if (diameterOutput) diameterOutput.textContent = 0;
+    }
 
-	} else {
-		 if (out) out.textContent = 0;
-	}
-	// implement diameter with shortcut
-
+    const diameterWithShortcutOutput = document.getElementById("output2wshortcut");
+    // implement diameter with shortcut
+    if (shortcut.length == 2) {
+      let chains = splitPathIntoPolygonalChains();
+      let diameter = computeDiameterWithShortcut(chains);
+      console.log("diameter: ", diameter);
+      diameterWithShortcutOutput.textContent = Math.round((diameter + Number.EPSILON) * 100) / 100
+;
+    }
   };
 
-  const splitPathIntoPolygonalChains = () =>{
-	let chains = [];
-	let pointNumber = 0;
-	currentChain = [points[0]];
-	while (pointNumber < points.length) {
-		let startPoint = points[pointNumber]
-		let endPoint = points[pointNumber + 1]
-		let point = intersectionOfTwoSegments(points)
-		if (point == null){
-			currentChain.push(point)
-			pointNumber++;
+  const splitPathIntoPolygonalChains = () => {
+    // for the moment works only when shortcut is at endpoints
+    let chains = [];
+    let pointNumber = 0;
 
-		} else {
-			// create new chain each time a line crosses the shortcut.
-			currentChain.push(endPoint);
-			chains.push(currentChain);
-			currentChain = [];
-		}
-	
+    let currentChain = [points[0]];
 
-	}
-  }
+    // we need to handle the cases when the path goes backward because we need to have the intersections in the order from left to right
+    // we can do it with jordan sorting
+    while (pointNumber < points.length - 1) {
+
+      let startPoint = points[pointNumber];
+      let endPoint = points[pointNumber + 1];
+
+      let intersectionFound = false;
+
+      let intersection = intersectionOfTwoSegments(shortcut[0].x, shortcut[0].y, shortcut[1].x, shortcut[1].y, startPoint.x, startPoint.y, endPoint.x, endPoint.y);
+
+      if (intersection && !(intersection.x == startPoint.x && intersection.y == startPoint.y)) {
+        intersectionFound = true;
+        currentChain.push(intersection);
+        chains.push(currentChain);
+        currentChain = [intersection];
+        if (!(intersection.x == endPoint.x && intersection.y == endPoint.y)) {
+          currentChain.push(endPoint);
+        }
+        pointNumber++;
+      } else {
+        currentChain.push(endPoint);
+        pointNumber++;
+      }
+    }
+
+    console.log(chains);
+    return chains;
+  };
+
+  const computeDiameterWithShortcut = (chains) => {
+    let diameter_for_each_chain = [];
+    let R_for_each_chain = [];
+    let max_alpha = 0;
+    let max_alpha_index = 0;
+    for (let i = 0; i < chains.length; i++) {
+      let chain = chains[i];
+      let chain_length = chain.length;
+      let p_l = chain[0]; // ppli
+      let p_r = chain[chain_length - 1]; // priq
+      let s_i = [p_l, p_r]; // segment between pil and pir
+      let L = [shortcut[0], p_l];
+      let R = euclidian_distance(p_r, shortcut[1]);
+      let D = calculateperimeter(chain, true) / 2;
 
 
+      // FIRST CASE
+      R_for_each_chain.push(R);
+      diameter_for_each_chain.push(D);
 
-	// https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
-	const intersectionOfTwoSegments = (x1, y1, x2, y2, x3, y3, x4, y4) =>  {
-	const determinant = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
-	if (determinant === 0) {
-		return null;
-	}
+      let alpha = D + R;
 
-	const t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / determinant;
-	const u = -((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3)) / determinant;
+      if (alpha > max_alpha) {
+        console.log("D: ", D, " R: ", R);
+        max_alpha = alpha;
+        max_alpha_index = i;
+      }
 
-	if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
-		const x = x1 + t * (x2 - x1);
-		const y = y1 + t * (y2 - y1);
-		return (x, y);
-	}
+      // SECOND CASE
 
-	return null;
-	}
+    }
+    return max_alpha;
+  };
+
+  const calculateperimeter = (chain, cycle) => {
+    let perimeter = 0;
+    let chain_length = chain.length;
+    if (cycle == false){
+      chain_length = chain_length - 1;
+    }
+    for (let i = 0; i < chain_length; i++) {
+      let startPoint = chain[i];
+      let endPoint = chain[(i + 1) % chain.length];
+      let distance = euclidian_distance(startPoint, endPoint);
+      perimeter += distance;
+    }
+    console.log("perimeter", perimeter);
+    return perimeter;
+  };
+
+  const euclidian_distance = (startPoint, endPoint) => {
+    return Math.sqrt(((startPoint.x - endPoint.x)) ** 2 + ((startPoint.y - endPoint.y)) ** 2);
+  };
+
+  // https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
+  const intersectionOfTwoSegments = (x1, y1, x2, y2, x3, y3, x4, y4) => {
+    const determinant = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+    if (determinant === 0) {
+      return null;
+    }
+
+    const t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / determinant;
+    const u = -((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3)) / determinant;
+
+    if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
+      const x = x1 + t * (x2 - x1);
+      const y = y1 + t * (y2 - y1);
+      return { x: x, y: y };
+    }
+
+    return null;
+  };
 
   sketch.switchShortcutMode = () => {
     if (shortcutmode) {
@@ -159,9 +240,9 @@ const s2 = (sketch) => {
     sketch.background(240);
     drawGrid();
     drawPoints();
-	sketch.stroke('magenta');
+    sketch.stroke('magenta');
     drawShortCut();
-	sketch.stroke("black");
+    sketch.stroke("black");
     if (
       typeof sketch.mouseX !== "undefined" &&
       sketch.mouseX >= 0 &&
@@ -169,9 +250,9 @@ const s2 = (sketch) => {
       sketch.mouseY >= 0 &&
       sketch.mouseY <= h
     ) {
-      let x = Math.round(sketch.mouseX / gridSize) * gridSize;
-      let y = Math.round(sketch.mouseY / gridSize) * gridSize;
-      sketch.ellipse(x, y, 6, 6);
+      let x = Math.round(sketch.mouseX / gridSize) ;
+      let y = Math.round(sketch.mouseY / gridSize) ;
+      sketch.ellipse(x * gridSize, y * gridSize, 6, 6);
     }
   };
 
@@ -181,27 +262,16 @@ const s2 = (sketch) => {
     const h = s[1];
     if (typeof sketch.mouseX === "undefined") return;
     if (sketch.mouseX >= 0 && sketch.mouseX <= w && sketch.mouseY >= 0 && sketch.mouseY <= h) {
-      let x = Math.round(sketch.mouseX / gridSize) * gridSize;
-      let y = Math.round(sketch.mouseY / gridSize) * gridSize;
+      let x = Math.round(sketch.mouseX / gridSize);
+      let y = Math.round(sketch.mouseY / gridSize);
       if (shortcutmode) {
-        shortcut.push({
-          x: x,
-          y: y,
-          size: 6,
-          color: sketch.color(255, 0, 0),
-        });
+        shortcut.push(new Point(x, y, sketch.color(255, 0, 0)));
+        shortcut.sort((a, b) => a.x - b.x);
       } else {
-		const existingPoint = points.find(point => point.x === x && point.y === y);
-		if (!existingPoint) {
-				points.push({
-				x: x,
-				y: y,
-				size: 6,
-				color: sketch.color(0, 0, 0),
-				});
-			} else {
-
-			}
+        const existingPoint = points.find(point => point.x === x && point.y === y);
+        if (!existingPoint) {
+          points.push(new Point(x, y, sketch.color(0, 0, 0)));
+        }
       }
     }
     computeDiameterNetworkSketch2();
@@ -214,7 +284,7 @@ const s2 = (sketch) => {
       if (shortcutmode) {
         sketch.switchShortcutMode();
       }
-	  computeDiameterNetworkSketch2(); // reset diameter
+      computeDiameterNetworkSketch2(); // reset diameter
     }
   };
 };

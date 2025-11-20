@@ -86,8 +86,59 @@ const s2 = (sketch) => {
 
   const computeDiameterNetworkSketch2 = () => {
     const out = document.getElementById("output2");
-    if (out) out.textContent = 4;
+	if (points.length > 1) {
+    if (out) out.textContent = points.length - 1;
+
+	} else {
+		 if (out) out.textContent = 0;
+	}
+	// implement diameter with shortcut
+
   };
+
+  const splitPathIntoPolygonalChains = () =>{
+	let chains = [];
+	let pointNumber = 0;
+	currentChain = [points[0]];
+	while (pointNumber < points.length) {
+		let startPoint = points[pointNumber]
+		let endPoint = points[pointNumber + 1]
+		let point = intersectionOfTwoSegments(points)
+		if (point == null){
+			currentChain.push(point)
+			pointNumber++;
+
+		} else {
+			// create new chain each time a line crosses the shortcut.
+			currentChain.push(endPoint);
+			chains.push(currentChain);
+			currentChain = [];
+		}
+	
+
+	}
+  }
+
+
+
+	// https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
+	const intersectionOfTwoSegments = (x1, y1, x2, y2, x3, y3, x4, y4) =>  {
+	const determinant = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+	if (determinant === 0) {
+		return null;
+	}
+
+	const t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / determinant;
+	const u = -((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3)) / determinant;
+
+	if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
+		const x = x1 + t * (x2 - x1);
+		const y = y1 + t * (y2 - y1);
+		return (x, y);
+	}
+
+	return null;
+	}
 
   sketch.switchShortcutMode = () => {
     if (shortcutmode) {
@@ -160,10 +211,10 @@ const s2 = (sketch) => {
     if (typeof sketch.key === "string" && (sketch.key === "c" || sketch.key === "C")) {
       points = [];
       shortcut = [];
-      drawPoints();
       if (shortcutmode) {
         sketch.switchShortcutMode();
       }
+	  computeDiameterNetworkSketch2(); // reset diameter
     }
   };
 };

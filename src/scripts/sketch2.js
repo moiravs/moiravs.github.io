@@ -50,6 +50,11 @@ const s2 = (sketch) => {
     sketch.strokeWeight(2);
   };
 
+  const logError = (error) => {
+    const errorOutput = document.getElementById("error");
+    errorOutput.textContent = error;
+  }
+
   const drawShortCut = () => {
     sketch.stroke('magenta');
     for (let pointNumber = 0; pointNumber < shortcut.length - 1; pointNumber++) {
@@ -106,10 +111,10 @@ const s2 = (sketch) => {
       let chains = splitPathIntoPolygonalChains();
       let diameter = computeDiameterWithShortcut(chains);
       console.log("diameter: ", diameter);
-      diameterWithShortcutOutput.textContent = Math.round((diameter + Number.EPSILON) * 100) / 100
-;
+      diameterWithShortcutOutput.textContent = Math.round((diameter + Number.EPSILON) * 100) / 100;
+
     } else {
-      diameterOutput.textContent = "N/A";
+      diameterWithShortcutOutput.textContent = "N/A";
     }
   };
 
@@ -154,29 +159,22 @@ const s2 = (sketch) => {
   };
 
   const computeDiameterWithShortcut = (chains) => {
-    let diameter_for_each_chain = [];
-    let R_for_each_chain = [];
     let max_alpha = 0;
     let max_alpha_index = 0;
     for (let i = 0; i < chains.length; i++) {
       let chain = chains[i];
       let chain_length = chain.length;
-      let p_l = chain[0]; // ppli
       let p_r = chain[chain_length - 1]; // priq
-      let s_i = [p_l, p_r]; // segment between pil and pir
-      let L = [shortcut[0], p_l];
-      let R = euclidian_distance(p_r, shortcut[1]);
+      let R1 = euclidian_distance(p_r, shortcut[1]);
+      let R2 = euclidian_distance(p_r, shortcut[0]);
       let D = calculateperimeter(chain, true) / 2;
 
-
       // FIRST CASE
-      R_for_each_chain.push(R);
-      diameter_for_each_chain.push(D);
 
-      let alpha = D + R;
+      let alpha = D + Math.min(R1,R2);
 
       if (alpha > max_alpha) {
-        console.log("D: ", D, " R: ", R);
+        console.log("D: ", D, " R: ", Math.min(R1,R2));
         max_alpha = alpha;
         max_alpha_index = i;
       }
@@ -260,7 +258,7 @@ const s2 = (sketch) => {
       sketch.ellipse(x * gridSize, y * gridSize, 6, 6);
     }
   };
-
+  // avoid to have intersection with current path
   sketch.mousePressed = () => {
     const s = getCanvasSize();
     const w = s[0];
@@ -275,7 +273,16 @@ const s2 = (sketch) => {
       } else {
         const existingPoint = points.find(point => point.x === x && point.y === y);
         if (!existingPoint) {
+          for (let i = 0; i < points.length - 2; i++) {
+            if (intersectionOfTwoSegments(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y, points[points.length - 1].x, points[points.length - 1].y, x, y)) {
+              logError("New segment crosses another segment")
+              return;
+            }
+          }
           points.push(new Point(x, y, sketch.color(0, 0, 0)));
+          logError("");
+        } else {
+          logError("Point already exists");
         }
       }
     }
@@ -290,6 +297,12 @@ const s2 = (sketch) => {
         sketch.switchShortcutMode();
       }
       computeDiameterNetworkSketch2(); // reset diameter
+    } 
+    if (sketch.key === "z"){
+
+      points.pop();
+      computeDiameterNetworkSketch2(); // reset diameter
+
     }
   };
 };

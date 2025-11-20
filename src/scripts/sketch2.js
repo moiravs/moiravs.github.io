@@ -108,6 +108,8 @@ const s2 = (sketch) => {
       console.log("diameter: ", diameter);
       diameterWithShortcutOutput.textContent = Math.round((diameter + Number.EPSILON) * 100) / 100
 ;
+    } else {
+      diameterOutput.textContent = "N/A";
     }
   };
 
@@ -142,6 +144,9 @@ const s2 = (sketch) => {
         currentChain.push(endPoint);
         pointNumber++;
       }
+    }
+    if (currentChain.length > 1){
+      chains.push(currentChain);
     }
 
     console.log(chains);
@@ -264,7 +269,7 @@ const s2 = (sketch) => {
     if (sketch.mouseX >= 0 && sketch.mouseX <= w && sketch.mouseY >= 0 && sketch.mouseY <= h) {
       let x = Math.round(sketch.mouseX / gridSize);
       let y = Math.round(sketch.mouseY / gridSize);
-      if (shortcutmode) {
+      if (shortcutmode && shortcut.length < 2) {
         shortcut.push(new Point(x, y, sketch.color(255, 0, 0)));
         shortcut.sort((a, b) => a.x - b.x);
       } else {

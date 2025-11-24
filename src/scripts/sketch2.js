@@ -138,6 +138,7 @@ const s2 = (sketch) => {
     // implement diameter with shortcut
     if (shortcut.length == 2) {
       let chains = splitPathIntoPolygonalChains();
+      console.log(chains)
       let diameter = computeDiameterWithShortcut(chains);
       diameterWithShortcutOutput.textContent = Math.round((diameter + Number.EPSILON) * 100) / 100;
 
@@ -164,6 +165,18 @@ const s2 = (sketch) => {
 
       let intersection = intersectionOfTwoSegments(shortcut[0].x, shortcut[0].y, shortcut[1].x, shortcut[1].y, startPoint.x, startPoint.y, endPoint.x, endPoint.y);
 
+      let twosegmentsame = checkiftwosegmentarethesame
+        (shortcut[0].x, shortcut[0].y, shortcut[1].x, shortcut[1].y, startPoint.x, startPoint.y, endPoint.x, endPoint.y)
+
+      if (twosegmentsame) {
+        pointNumber++;
+        currentChain.pop();
+        currentChain.push(endPoint)
+        continue;
+      }
+      
+
+
       if (intersection && !(intersection.x == startPoint.x && intersection.y == startPoint.y)) {
         intersectionFound = true;
         currentChain.push(intersection);
@@ -185,6 +198,36 @@ const s2 = (sketch) => {
     return chains;
   };
 
+  const checkiftwosegmentarethesame = (line1x1,
+    line1y1,
+    line1x2,
+    line1y2,
+    
+    line2x1,
+    line2y1,
+    line2x2,
+    line2y2
+  ) => {
+ 
+    // console.log("line1x1" , line1x1, "line1y1", line1y1, "line1x2", line1x2, "line1y2", line1y2)
+    // console.log("line2x1" , line2x1, "line2y1", line2y1, "line2x2", line2x2, "line2y2", line2y2)
+
+    if (line1x2 - line1x1)
+      line1m = (line1y2 - line1y1) / (line1x2 - line1x1);
+    else
+      line1m = 0
+    line1d = line1y1 - line1m * line1x1;
+
+    if (line2x2 - line2x1 != 0)
+      line2m = (line2y2 - line2y1) / (line2x2 - line2x1);
+    else 
+      line2m = 0
+    line2d = line2y1 - line2m * line2x1;
+
+
+    return line1m == line2m && line1d == line2d && ((line1y2 - line1y1) ==  (line2y2 - line2y1))
+  }
+
   const computeDiameterWithShortcut = (chains) => {
     let max_alpha = 0;
     let max_alpha_index = 0;
@@ -195,6 +238,7 @@ const s2 = (sketch) => {
       let R1 = euclidian_distance(p_r, shortcut[1]);
       let R2 = euclidian_distance(p_r, shortcut[0]);
       let D = calculateperimeter(chain, true) / 2;
+      console.log("D: ", D, " R1: ", R1, " R2: ", R2)
 
       // FIRST CASE
 

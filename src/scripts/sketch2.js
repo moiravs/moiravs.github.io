@@ -242,7 +242,7 @@ const s2 = (sketch) => {
   const computeDiameterWithShortcut = (chains) => {
     let max_alpha = 0;
     let max_alpha_index = 0;
-    for (let i = 0; i < chains.length; i++) {
+    for (let i = 0; i < chains.length - 1; i++) {
       let chain = chains[i];
       let p_l = chain[0]; // priq
       let p_r = chain[ chain.length - 1]; // priq
@@ -251,15 +251,47 @@ const s2 = (sketch) => {
       let Di = calculateperimeter(chain, true) / 2;
       let Ci = calculateperimeter(chain, false);
 
+      // handle degenerate case
+      if (i == 0 && p_l.y != shortcut[0].y && p_l.x != shortcut[0].x){
+        console.log("here2")
+
+        Dj = Cj // real perimeter
+        Rj = Lj
+        sj = 0
+      }
+          
       let j = i + 1;
+
 
       // FIRST CASE: Disjoint chain
       
       console.log("i: ", i)
-      if ((j > chains.length - 1) || ( chains[j][0].x > chain[chain.length - 1].x))  {
+      if ((j > chains.length - 1) || ( chains[j][0].x >= chain[chain.length - 1].x))  {
         console.log("disjoint chain")
-        console.log()
-        let alpha = Di + Ri;
+                
+        
+        let second_chain = chains[j];
+
+        let p_r2 = second_chain[second_chain.length - 1]; // priq
+        let p_l2 = second_chain[0]; // priq
+
+        let Lj = euclidian_distance(p_l2, shortcut[0]);
+        let Rj = euclidian_distance(p_r2, shortcut[1]);
+        let Cj = calculateperimeter(second_chain, false);
+        let Dj = calculateperimeter(second_chain, true) / 2;
+
+        let sj = euclidian_distance(p_l2, p_r2)
+
+        // handle degenerate case
+        if (j == chains.length - 1 && !(p_r2.y == shortcut[1].y && p_r2.x == shortcut[1].x)){
+          console.log("here")
+          Dj = Cj // real perimeter
+          Rj = euclidian_distance(p_l2, shortcut[1]);
+          sj = 0
+        }
+        console.log("Ri: ", Ri, " Rj: ", Rj, "sj: ", sj )
+
+        let alpha = Di + Ri - Rj - sj + Dj;
 
         if (alpha > max_alpha) {
           max_alpha = alpha;

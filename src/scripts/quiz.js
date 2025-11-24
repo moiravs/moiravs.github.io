@@ -93,22 +93,26 @@ class Quiz {
 		const answers = {
 			q1: this.getSelectedOption("q1"),
 			q2: this.getSelectedOption("q2"),
+			q3: this.getSelectedOption("q3"),
+			q4: this.getSelectedOption("q4"),
 			// extend as needed
 		};
 
 		let score = 0;
 		if (answers.q1 === "b") score += 10;
 		if (answers.q2 === "c") score += 10;
+		if (answers.q3 === "b") score += 10;
+		if (answers.q4 === "b") score += 10;
 
 		const resultSection = document.getElementById("result");
 		if (resultSection) resultSection.classList.remove("hidden");
 
 		const scoreElement = document.getElementById("score");
-		if (scoreElement) scoreElement.textContent = `Score: ${score}/20`;
+		if (scoreElement) scoreElement.textContent = `Score: ${score}/40`;
 
 		const feedbackElement = document.getElementById("feedback");
 		if (feedbackElement) {
-			if (score === 20)
+			if (score === 40)
 				feedbackElement.textContent = "Congratulations! You did great!";
 			else feedbackElement.textContent = "You can do better. Keep practicing.";
 		}

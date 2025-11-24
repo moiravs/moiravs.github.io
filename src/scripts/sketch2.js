@@ -50,6 +50,16 @@ const s2 = (sketch) => {
     sketch.strokeWeight(2);
   };
 
+  sketch.computeOptimalHorizontalShortcut = () => {
+    
+  }
+
+  sketch.computeOptimalShortcut = () => {
+    shortcut[0] = points[0];
+    shortcut[1] = points[points.length - 1];
+    computeDiameterNetworkSketch2();
+  };
+
   const logError = (error) => {
     const errorOutput = document.getElementById("error");
     errorOutput.textContent = error;
@@ -70,6 +80,23 @@ const s2 = (sketch) => {
       sketch.fill(p.color);
       sketch.ellipse(p.x * gridSize, p.y * gridSize, p.size, p.size);
       sketch.line(p.x * gridSize, p.y * gridSize, points[(i + 1) % points.length].x * gridSize, points[(i + 1) % points.length].y * gridSize);
+      // let midX = (p.x * gridSize + points[(i + 1) % points.length].x * gridSize) / 2;
+      // let midY = (p.y * gridSize + points[(i + 1) % points.length].y * gridSize) / 2;
+
+      // let angle = Math.atan2(p.y * gridSize - points[(i + 1) % points.length].y * gridSize, p.x * gridSize - points[(i + 1) % points.length].x * gridSize);
+      // sketch.textSize(14);
+      // sketch.textAlign(sketch.CENTER, sketch.CENTER);
+
+      // sketch.push();
+
+      // sketch.translate(midX, midY + 20);
+
+      // sketch.rotate(angle);
+
+      // sketch.text("1.3", 0, 0); 
+
+      // sketch.pop();
+
     }
 
     sketch.stroke('blue');
@@ -86,6 +113,8 @@ const s2 = (sketch) => {
     const el = document.getElementById("point-count2");
     if (el) el.textContent = points.length;
   };
+
+
 
   const getCanvasSize = () => {
     const container = document.getElementById("canvas-container2");
@@ -110,7 +139,6 @@ const s2 = (sketch) => {
     if (shortcut.length == 2) {
       let chains = splitPathIntoPolygonalChains();
       let diameter = computeDiameterWithShortcut(chains);
-      console.log("diameter: ", diameter);
       diameterWithShortcutOutput.textContent = Math.round((diameter + Number.EPSILON) * 100) / 100;
 
     } else {
@@ -154,7 +182,6 @@ const s2 = (sketch) => {
       chains.push(currentChain);
     }
 
-    console.log(chains);
     return chains;
   };
 
@@ -174,7 +201,6 @@ const s2 = (sketch) => {
       let alpha = D + Math.min(R1,R2);
 
       if (alpha > max_alpha) {
-        console.log("D: ", D, " R: ", Math.min(R1,R2));
         max_alpha = alpha;
         max_alpha_index = i;
       }
@@ -197,7 +223,6 @@ const s2 = (sketch) => {
       let distance = euclidian_distance(startPoint, endPoint);
       perimeter += distance;
     }
-    console.log("perimeter", perimeter);
     return perimeter;
   };
 
@@ -258,7 +283,8 @@ const s2 = (sketch) => {
       sketch.ellipse(x * gridSize, y * gridSize, 6, 6);
     }
   };
-  // avoid to have intersection with current path
+
+
   sketch.mousePressed = () => {
     const s = getCanvasSize();
     const w = s[0];
@@ -276,7 +302,7 @@ const s2 = (sketch) => {
           for (let i = 0; i < points.length - 2; i++) {
             if (intersectionOfTwoSegments(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y, points[points.length - 1].x, points[points.length - 1].y, x, y)) {
               logError("New segment crosses another segment")
-              return;
+              return ;
             }
           }
           points.push(new Point(x, y, sketch.color(0, 0, 0)));
@@ -288,6 +314,7 @@ const s2 = (sketch) => {
     }
     computeDiameterNetworkSketch2();
   };
+
 
   sketch.keyPressed = () => {
     if (typeof sketch.key === "string" && (sketch.key === "c" || sketch.key === "C")) {

@@ -160,6 +160,11 @@
 													class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
 													onclick="sketch2.switchShortcutMode()">Add ShortCut</button>
 											</li>
+											<li><button type="button"
+													class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
+													onclick="sketch2.computeOptimalShortcut()">Compute Optimal
+													Shortcut</button>
+											</li>
 
 										</ul>
 									</div>
@@ -216,50 +221,90 @@
 					<form id="quizForm" class="space-y-4">
 						<!-- Question 1 -->
 						<div class="flex flex-col mb-6">
-							<label for="q1" class="text-lg text-gray-800 mb-2">
+							<label for="q1" class="text-lg h-16 text-gray-800 mb-2">
 								1. Is this graph a planar graph ?
-								<div align="center" class="my-8 center">
-									<img class="rounded-lg border-2 w-full max-w-sm border-double"
-										src="sections/figures/quizq1.png" />
-								</div>
 							</label>
-							<div class="flex items-center space-x-4">
-								<input type="radio" id="q1a" name="q1" value="a" class="mr-2" required />
-								<label for="q1a" class="text-gray-700"> a) Yes </label>
+
+							<div align="center" class="my-8 center">
+								<img class="rounded-lg border-2 border-double h-80" src="sections/figures/quizq1.png" />
 							</div>
-							<div class="flex items-center space-x-4">
-								<input type="radio" id="q1b" name="q1" value="b" class="mr-2" required />
-								<label for="q1b" class="text-gray-700"> b) No </label>
+							<div class="h-12">
+								<div class="flex items-center space-x-4">
+									<input type="radio" id="q1a" name="q1" value="a" class="mr-2" required />
+									<label for="q1a" class="text-gray-700"> a) Yes </label>
+								</div>
+								<div class="flex items-center space-x-4">
+									<input type="radio" id="q1b" name="q1" value="b" class="mr-2" required />
+									<label for="q1b" class="text-gray-700"> b) No </label>
+								</div>
 							</div>
 						</div>
 
 						<!-- Question 2 -->
 						<div class="flex flex-col mb-6">
-							<label for="q2" class="text-lg text-gray-800 mb-2">
-								2. What is the diameter of the following graph:
-								canvas-container <div align="center" class="my-8 center">
-									<img class="rounded-lg border-2 w-full max-w-sm border-double"
-										src="sections/figures/quizq2.png" />
+							<label for="q2" class="text-lg h-16 text-gray-800 mb-2">
+								2. What is the diameter of the following graph (consider every edge as 1): </label>
+							<div align="center" class="my-8 center">
+								<img class="rounded-lg border-2 h-80 border-double" src="sections/figures/quizq2.png" />
+							</div>
+							<div class="h-12">
+								<div class="flex items-center space-x-4 ">
+									<input type="radio" id="q2a" name="q2" value="a" class="mr-2" required />
+									<label for="q2a" class="text-gray-700"> a) 2 </label>
 								</div>
-							</label>
-							<div class="flex items-center space-x-4">
-								<input type="radio" id="q2a" name="q2" value="a" class="mr-2" required />
-								<label for="q2a" class="text-gray-700"> a) 2 </label>
-							</div>
-							<div class="flex items-center space-x-4">
-								<input type="radio" id="q2b" name="q2" value="b" class="mr-2" required />
-								<label for="q2b" class="text-gray-700"> b) 3 </label>
-							</div>
-							<div class="flex items-center space-x-4">
-								<input type="radio" id="q2c" name="q2" value="c" class="mr-2" required />
-								<label for="q2c" class="text-gray-700"> c) 4 </label>
-							</div>
-							<div class="flex items-center space-x-4">
-								<input type="radio" id="q2d" name="q2" value="d" class="mr-2" required />
-								<label for="q2d" class="text-gray-700"> d) 5 </label>
+								<div class="flex items-center space-x-4">
+									<input type="radio" id="q2b" name="q2" value="b" class="mr-2" required />
+									<label for="q2b" class="text-gray-700"> b) 3 </label>
+								</div>
+								<div class="flex items-center space-x-4">
+									<input type="radio" id="q2c" name="q2" value="c" class="mr-2" required />
+									<label for="q2c" class="text-gray-700"> c) 4 </label>
+								</div>
+								<div class="flex items-center space-x-4">
+									<input type="radio" id="q2d" name="q2" value="d" class="mr-2" required />
+									<label for="q2d" class="text-gray-700"> d) 5 </label>
+								</div>
 							</div>
 						</div>
 
+						<div class="flex flex-col mb-6">
+							<label for="q3" class="text-lg h-16 text-gray-800 mb-2">
+								3. What is the best shortcut:</label>
+							<div align="center" class="my-8 center">
+								<img class="rounded-lg border-2 h-40 border-double"
+									src="sections/figures/optimalsc.png" />
+								<img class="rounded-lg border-2 h-40 border-double"
+									src="sections/figures/optimalsc2.png" />
+							</div>
+							<div class="h-12">
+								<div class="flex items-center space-x-4">
+									<input type="radio" id="q3a" name="q3" value="a" class="mr-2" required />
+									<label for="q3a" class="text-gray-700"> a) First one </label>
+								</div>
+								<div class="flex items-center space-x-4">
+									<input type="radio" id="q3b" name="q3" value="b" class="mr-2" required />
+									<label for="q3b" class="text-gray-700"> b) Second one </label>
+								</div>
+							</div>
+						</div>
+						<div class="flex flex-col mb-6">
+							<label for="q4" class="text-lg h-16 text-gray-800 mb-2">
+								4. Is this a path network: </label>
+							<div align="center" class="my-8 center">
+								<img class="rounded-lg border-2 h-80 border-double"
+									src="sections/figures/pathnetwork.png" />
+							</div>
+							<div class="h-12">
+								<div class="flex items-center space-x-4">
+									<input type="radio" id="q4a" name="q4" value="a" class="mr-2" required />
+									<label for="q4a" class="text-gray-700"> a) Yes </label>
+								</div>
+								<div class="flex items-center space-x-4">
+									<input type="radio" id="q4b" name="q4" value="b" class="mr-2" required />
+									<label for="q4b" class="text-gray-700"> b) No </label>
+								</div>
+							</div>
+						</div>
 						<hr />
 
 						<!-- Navigation Buttons -->
@@ -287,6 +332,26 @@
 			<section id="bibliography" class="text-left space-y-8">
 				<h2 class="text-3xl font-bold text-left">Bibliography</h2>
 				<div id="bibliography-content" class="text-left prose mx-auto text-center"></div>
+				<ol type="[1]">
+					<li>
+						<p id="originalpaper"> [1] D. Garijo, A. Márquez, N. Rodríguez, and R. I. Silveira, “Computing
+							optimal shortcuts
+							for
+							networks,”
+							<i>European Journal of Operational Research</i>, vol. 279, no. 1, pp. 26–37, 2019, doi:
+							<a href="url">https://doi.org/10.1016/j.ejor.2019.05.018 </a>.
+						</p>
+					</li>
+				</ol>
+			</section>
+
+			<section class="text-left space-y-8">
+				<h2 class="text-3xl font-bold text-left">Additional notes</h2>
+				<p>
+					This website is made with TailWind and the css theme used is <a
+						href="url">https://sakofchit.github.io/system.css/</a>.
+					All the figures were made with Typst by us.
+				</p>
 			</section>
 		</main>
 	</div>

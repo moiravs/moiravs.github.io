@@ -57,6 +57,7 @@ const s2 = (sketch) => {
   sketch.computeOptimalShortcut = () => {
     shortcut[0] = points[0];
     shortcut[1] = points[points.length - 1];
+
     computeDiameterNetworkSketch2();
   };
 
@@ -125,6 +126,10 @@ const s2 = (sketch) => {
     return [w, h];
   };
 
+  function compareChains(chaina, chainb) {
+  return chaina.x - chainb.x;
+}
+
   const computeDiameterNetworkSketch2 = () => {
     const diameterOutput = document.getElementById("output2");
     if (points.length > 1) {
@@ -139,6 +144,8 @@ const s2 = (sketch) => {
     if (shortcut.length == 2) {
       let chains = splitPathIntoPolygonalChains();
       console.log(chains)
+      // sort the cycles
+      chains.sort(compareChains)
       let diameter = computeDiameterWithShortcut(chains);
       diameterWithShortcutOutput.textContent = Math.round((diameter + Number.EPSILON) * 100) / 100;
 
@@ -180,6 +187,8 @@ const s2 = (sketch) => {
       if (intersection && !(intersection.x == startPoint.x && intersection.y == startPoint.y)) {
         intersectionFound = true;
         currentChain.push(intersection);
+        if (currentChain[0].x > currentChain[currentChain.length - 1].x)
+          currentChain.reverse()
         chains.push(currentChain);
         currentChain = [intersection];
         if (!(intersection.x == endPoint.x && intersection.y == endPoint.y)) {
@@ -192,6 +201,8 @@ const s2 = (sketch) => {
       }
     }
     if (currentChain.length > 1){
+      if (currentChain[0].x > currentChain[currentChain.length - 1].x)
+        currentChain.reverse()
       chains.push(currentChain);
     }
 
@@ -233,27 +244,83 @@ const s2 = (sketch) => {
     let max_alpha_index = 0;
     for (let i = 0; i < chains.length; i++) {
       let chain = chains[i];
-      let chain_length = chain.length;
-      let p_r = chain[chain_length - 1]; // priq
-      let R1 = euclidian_distance(p_r, shortcut[1]);
-      let R2 = euclidian_distance(p_r, shortcut[0]);
-      let D = calculateperimeter(chain, true) / 2;
-      console.log("D: ", D, " R1: ", R1, " R2: ", R2)
+      let p_l = chain[0]; // priq
+      let p_r = chain[ chain.length - 1]; // priq
+      let Li = euclidian_distance(p_l, shortcut[0]);
+      let Ri = euclidian_distance(p_r, shortcut[1]);
+      let Di = calculateperimeter(chain, true) / 2;
+      let Ci = calculateperimeter(chain, false);
 
-      // FIRST CASE
+      let j = i + 1;
 
-      let alpha = D + Math.min(R1,R2);
+      // FIRST CASE: Disjoint chain
+      
+      console.log("i: ", i)
+      if ((j > chains.length - 1) || ( chains[j][0].x > chain[chain.length - 1].x))  {
+        console.log("disjoint chain")
+        console.log()
+        let alpha = Di + Ri;
 
-      if (alpha > max_alpha) {
-        max_alpha = alpha;
-        max_alpha_index = i;
+        if (alpha > max_alpha) {
+          max_alpha = alpha;
+          max_alpha_index = i;
+        }
       }
 
-      // SECOND CASE
+      // SECOND CASE: Nested chain
+
+      while  (j < chains.length && chains[j][0].x < chain[chain.length - 1].x && chains[j][chains[j].length - 1].x < chain[chain.length - 1].x ){
+        console.log("nested chain")
+        
+        let second_chain = chains[j]
+
+        let p_l2 = second_chain[0]; // priq
+        let p_r2 = second_chain[second_chain.length - 1]; // priq
+
+        let Lj = euclidian_distance(p_l2, shortcut[0]);
+        let Rj = euclidian_distance(p_r2, shortcut[1]);
+        let Cj = calculateperimeter(second_chain, false);
+
+        let beta = Cj + Lj + Rj;
+        let result = (Ci - Li - Ri + beta) / 2
+
+
+        if (result > max_alpha) {
+          max_alpha = result;
+          max_alpha_index = i;
+        }
+      j++;
 
     }
+
+    // THREE CASE: Overlapping case
+      while  (j < chains.length && chains[j][0].x < chain[chain.length - 1].x && chains[j][chains[j].length - 1].x > chain[chain.length - 1].x ){
+        console.log("overlapping chain")
+        
+        let second_chain = chains[j]
+
+        let p_r2 = second_chain[second_chain.length - 1]; // priq
+        let p_l2 = second_chain[0]; // priq
+
+        let Lj = euclidian_distance(p_l2, shortcut[0]);
+        let Rj = euclidian_distance(p_r2, shortcut[1]);
+        let Cj = calculateperimeter(second_chain, false);
+
+        let gamma = Cj  + Lj - Rj;
+
+        let result = (Ci - Li + Ri + gamma) / 2
+        if (result > max_alpha) {
+          max_alpha = result;
+          max_alpha_index = i;
+        }
+      j++;
+       }
+      i = j;
+
+      }
     return max_alpha;
   };
+
 
   const calculateperimeter = (chain, cycle) => {
     let perimeter = 0;
@@ -338,6 +405,13 @@ const s2 = (sketch) => {
       let x = Math.round(sketch.mouseX / gridSize);
       let y = Math.round(sketch.mouseY / gridSize);
       if (shortcutmode && shortcut.length < 2) {
+        if (shortcut.length == 1){
+          if (shortcut[0].y != y) { // not horizontal shortcut
+            logError("Computed optimal shortcut is not horizontal");
+            return;
+          }
+        }
+
         shortcut.push(new Point(x, y, sketch.color(255, 0, 0)));
         shortcut.sort((a, b) => a.x - b.x);
       } else {

@@ -1,0 +1,5 @@
+This project successfully achieved its central objective: to understand the core problem studied in *Computing optimal shortcuts for networks* and to reconstruct the fundamental principles behind the proposed algorithm. We clarified the theoretical foundations of optimal shortcuts in both general geometric networks and path networks, and examined how a single segment can reduce the global structure of a graph through its diameter.
+
+We then implemented a working version of the algorithm. Although this implementation still contains bugs in certain edge cases, it correctly captures the essential behaviour described in the paper and reproduces the main mechanism by which shortcut placement affects network distances.
+
+In summary, we gained a solid understanding of the original paper’s goal, reproduced the main algorithmic ideas through our implementation, and highlighted the theoretical and practical challenges of computing optimal shortcuts in geometric networks. This work naturally suggests further improvements, both in robustness and computational precision.

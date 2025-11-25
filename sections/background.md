@@ -26,7 +26,7 @@ This section is to give the necessary theoretical background on the concepts men
     <img class="rounded-lg border-2  w-full  max-w-xs border-double" src="../../sections/figures/planarmodel.png"/>
 
 </div>
-    <caption class="italic font-sans antialiased text-sm text-current mt-2 block text-center">Figure 2: A non planar model(on the left) vs A planar model (on the right)</caption>
+    <caption class="italic font-sans antialiased text-sm text-current mt-2 block text-center">Figure 2: A non planar model (on the left) vs A planar model (on the right)</caption>
 
 </div>
 

@@ -14,5 +14,5 @@ There are two types of networks: general networks and path networks. Path networ
 
 <div align="center" class="my-8 center ">
   <img class="rounded-lg border-2 w-full  max-w-xs border-double" src="../../sections/figures/pathnetworks.png"  />
-  <caption class="m-px italic font-sans antialiased text-xs text-current mt-2 block text-center">Figure 4: Example of path network</caption>
+  <i class="text-md">Figure 4: Example of path network</i>
 </div>

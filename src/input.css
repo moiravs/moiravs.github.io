@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-
+@theme {  --font-display: "Chicago", sans-serif; }
 
 pre {
     background: #f4f4f4;

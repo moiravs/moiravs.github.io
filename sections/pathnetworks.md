@@ -13,7 +13,7 @@ The objective is to compute $$\mathrm{diam}(P \cup s),$$ the diameter of
 the augmented network, in $\mathcal{O}(n)$ time once intersection points
 are known.
 
-<h3 class="text-xl font-bold text-left">Structure of the Path and Intersection Points</h3>
+<h3 class="font-display text-xl font-bold text-left">Structure of the Path and Intersection Points</h3>
 
 
 Let the shortcut $s$ be a horizontal segment delimited by $p$ (on the left) and $q$ (on the right). Let $P'$ be the drawing of
@@ -29,12 +29,12 @@ ones).
 
 <div align="center" class="my-8 center ">
   <img class="rounded-lg border-2 w-full  max-w-xs border-double" src="../../sections/figures/chain.png"  />
-  <caption class="m-px italic font-sans antialiased text-sm text-current mt-2 block text-center"></caption>
+  <i class="text-md">Figure 5: Representation of decomposition into chains</i>
 </div>
 
 
 
-<h3 class="text-xl font-bold text-left">Precomputations</h3>
+<h3 class="font-display text-xl font-bold text-left">Precomputations</h3>
 
 
 
@@ -60,7 +60,7 @@ For each chain $C_i$, we have:
 Both arrays $(D_i)$ and $(R_i)$ are computed in overall linear time by
 performing a prefix and suffix sweep on the path.
 
-<h3 class="text-xl font-bold text-left">Distance Through the Shortcut</h3>
+<h3 class="font-display text-xl font-bold text-left">Distance Through the Shortcut</h3>
 
 
 For any chain $C_i$ (with endpoints $x_i$ and $x_{i+1}$), the distance
@@ -78,7 +78,7 @@ Intuitively:
 -   $|x_i x_{i+1}| + R_i$ corresponds to "jumping" across the shortcut
     and then walking along the path.
 
-<h3 class="text-xl font-bold text-left">Linear Sweep to Compute the Diameter</h3>
+<h3 class="font-display text-xl font-bold text-left">Linear Sweep to Compute the Diameter</h3>
 
 
 The key result is that the diameter of $P \cup s$ is obtained by a
@@ -89,7 +89,7 @@ There are three different cases:
 - Nested case 
 - Overlapping case
 
-
+<div align="center" class="my-8 center ">
 <div class="w-full grid grid-cols-3 gap-1 justify-items-center">
     <p>Disjoint</p>
     <p>Overlapping</p>
@@ -99,8 +99,9 @@ There are three different cases:
     <img class="rounded-lg border-2  w-full  max-w-xs border-double h-48" src="../../sections/figures/nested.png"/>
 
 </div>
+    <i class="text-md">Figure 5: Representation of decomposition into chains</i>
 
-
+</div>
 1. For the disjoint case, we compute the result as the following: $D_i + R_i - R_j - |s_j| + D_j$
 
 2. For the nested chains, the result is given by $|C_i| - L_i - R_i + beta_j$ with beta = $|C_j| + L_j + R_j$.
@@ -110,7 +111,7 @@ There are three different cases:
 The maximum result found gives us the diameter.
 
 
-<h3 class="text-xl font-bold text-left">Final Complexity</h3>
+<h3 class=" font-display text-xl font-bold text-left">Final Complexity</h3>
 
 
 -   Intersection detection and sorting along a horizontal shortcut:

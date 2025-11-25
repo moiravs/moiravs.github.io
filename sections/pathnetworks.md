@@ -90,7 +90,6 @@ There are three different cases:
 - Overlapping case
 
 
-<div align="center" class="my-8 center ">
 <div class="w-full grid grid-cols-3 gap-1 justify-items-center">
     <p>Disjoint</p>
     <p>Overlapping</p>
@@ -102,6 +101,13 @@ There are three different cases:
 </div>
 
 
+1. For the disjoint case, we compute the result as the following: $D_i + R_i - R_j - |s_j| + D_j$
+
+2. For the nested chains, the result is given by $|C_i| - L_i - R_i + beta_j$ with beta = $|C_j| + L_j + R_j$.
+
+3. For the overlapping chains, the result is given by $|C_i| - L_i + R_i + gamma_j$ with gamma = $|C_j| + L_j - R_j$.
+
+The maximum result found gives us the diameter.
 
 
 <h3 class="text-xl font-bold text-left">Final Complexity</h3>

@@ -28,7 +28,7 @@ path between $x_i$ and $x_{i+1}$ (possibly degenerate for the extremal
 ones).
 
 <div align="center" class="my-8 center ">
-  <img class="rounded-lg border-2 w-full  max-w-xs border-double" src="../../sections/figures/chain.png"  />
+  <img class="rounded-lg border-2 w-full  max-w-md border-double" src="../../sections/figures/chain.png"  />
   <i class="text-md">Figure 5: Representation of decomposition into chains</i>
 </div>
 
@@ -60,6 +60,12 @@ For each chain $C_i$, we have:
 Both arrays $(D_i)$ and $(R_i)$ are computed in overall linear time by
 performing a prefix and suffix sweep on the path.
 
+<div align="center" class="my-8 center ">
+  <img class="rounded-lg border-2 w-full  max-w-md border-double" src="../../sections/figures/parameters.png"  />
+  <i class="text-md">Figure 6: Representation of all parameters</i>
+</div>
+
+
 <h3 class="font-display text-xl font-bold text-left">Distance Through the Shortcut</h3>
 
 
@@ -84,10 +90,7 @@ Intuitively:
 The key result is that the diameter of $P \cup s$ is obtained by a
 single left-to-right sweep computing.
 
-There are three different cases:
-- Disjoint case
-- Nested case 
-- Overlapping case
+There are three different cases: disjoint, nested and overlapping.
 
 <div align="center" class="my-8 center ">
 <div class="w-full grid grid-cols-3 gap-1 justify-items-center">
@@ -99,7 +102,7 @@ There are three different cases:
     <img class="rounded-lg border-2  w-full  max-w-xs border-double h-48" src="../../sections/figures/nested.png"/>
 
 </div>
-    <i class="text-md">Figure 5: Representation of decomposition into chains</i>
+    <i class="text-md">Figure 7: Disjoint, Nested and Overlapping case</i>
 
 </div>
 1. For the disjoint case, we compute the result as the following: $D_i + R_i - R_j - |s_j| + D_j$
@@ -123,4 +126,7 @@ The maximum result found gives us the diameter.
 
 Therefore,
 $$\mathrm{diam}(P \cup s) \text{ is computed in } \mathcal{O}(n).$$
+
+<h3 class=" font-display text-xl font-bold text-left">What I've implemented</h3>
+
 

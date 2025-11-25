@@ -1,126 +1,227 @@
+<h3 class="font-display text-xl font-bold text-left">Path networks (reminder)</h3>
 
-Path networks are essentially a simpler special case of general networks.
-They consist of a sequence of vertices connected by edges and no branching, which means every internal vertex has degree 2, endpoints have degree 1.
+Path networks are the simplest non-trivial geometric networks: a sequence
+of vertices connected by edges with no branching. Every internal vertex
+has degree two and the endpoints have degree one. Geometrically the path
+is a single polyline (polygonal chain) and all distances are measured
+along that embedding.
 
-Visually, it is basically represented as a polyline : a single, non-branching route.
+<h3 class="font-display text-xl font-bold text-left">Problem and goal</h3>
 
+We consider a polygonal path \(P=(v_0,\dots,v_n)\) embedded in the plane
+and a horizontal shortcut \(s=pq\) with \(p\) left of \(q\). Our task
+is to compute the diameter of the augmented network \(P\cup s\),
+\(\mathrm{diam}(P\cup s)\), in \(\mathcal{O}(n)\) time once the
+intersection points between \(s\) and \(P\) are known.
 
-We now summarize the algorithm that computes the diameter of a path $P$
-after the insertion of a horizontal shortcut $s = pq$. The network here
-is a single simple path, represented by a polygonal chain
-$P = (v_0, v_1, \ldots, v_n)$ embedded in the plane.\
-The objective is to compute $$\mathrm{diam}(P \cup s),$$ the diameter of
-the augmented network, in $\mathcal{O}(n)$ time once intersection points
-are known.
+<h3 class="font-display text-xl font-bold text-left">Structure of the path and intersection points</h3>
 
-<h3 class="font-display text-xl font-bold text-left">Structure of the Path and Intersection Points</h3>
-
-
-Let the shortcut $s$ be a horizontal segment delimited by $p$ (on the left) and $q$ (on the right). Let $P'$ be the drawing of
-the path in the plane. The segment $s$ intersects $P'$ at a finite,
-ordered sequence of points $$x_0, x_1, \ldots, x_m,$$ sorted from left
-to right by $x$-coordinate. This sorting is sometimes referred to as a
-*Jordan sort*, but since $s$ is horizontal, it reduces to a standard
-numeric sort.\
-These intersections partition the path $P$ into **chains**
-$$C_0, C_1, \ldots, C_m,$$ where each chain $C_i$ is the portion of the
-path between $x_i$ and $x_{i+1}$ (possibly degenerate for the extremal
-ones).
+Let the drawing of the path be \(P'\). The horizontal segment \(s\)
+meets \(P'\) in a finite, left-to-right ordered list of points
+\[
+x_0,x_1,\dots,x_m
+\]
+(sorted by \(x\)-coordinate). These intersections partition the path
+into chains
+\[
+C_0,C_1,\dots,C_m,
+\]
+where each chain \(C_i\) is the subpath of \(P\) between \(x_i\) and
+\(x_{i+1}\) (the extremal chains may be open on one side).
 
 <div align="center" class="my-8 center ">
-  <img class="rounded-lg border-2 w-full  max-w-xs border-double" src="../../sections/figures/chain.png"  />
-  <i class="text-md">Figure 5: Representation of decomposition into chains</i>
+  <img class="rounded-lg border-2 w-full max-w-xs border-double" src="../../sections/figures/chain.png"  />
+  <i class="text-md">Figure: chains induced by the shortcut</i>
 </div>
-
-
 
 <h3 class="font-display text-xl font-bold text-left">Precomputations</h3>
 
+For each chain \(C_i\) we compute and store the following values:
 
+- **Left endpoint** \(p_i^l\) and **right endpoint** \(p_i^r\).  
+- **Chain length**  
+  \[
+  |C_i| = \text{length of the path segment from } p_i^l \text{ to } p_i^r.
+  \]
+  (For \(C_0\) and \(C_m\) this equals the prefix/suffix lengths.)
 
-For each chain $C_i$, we have:
+- **Right reach**  
+  \[
+  R_i = |p_i^r q|
+  \]
+  (distance along the shortcut from the chain's right endpoint to \(q\)).
 
-- The **left endpoint of the chain** $p_{i}^l$.
-- The **right endpoint of the chain** $p_{i}^r$.
-- The **chain length**
-    $$|C_i| = \text{length of the path segment of } P \text{ from } p_{i}^l \text{ to } p_{i}^r$$
+- **Left reach**  
+  \[
+  L_i = |p_i^l p|.
+  \]
 
-    For $C_0$ and $C_m$, the chain is "open" at one side, so $|C_0|$ and
-    $|C_m|$ are simply the lengths of the prefix and suffix of the path.
+- **Internal contributor**  
+  \[
+  D_i = \max\{\text{distance from } p_i^l \text{ to any point of } C_i\cup s_i\},
+  \]
+  i.e. the farthest distance reachable inside the chain (and its local
+  shortcut segment). This can be computed using cumulative lengths and
+  the semiperimeter trick for the cycle \(C_i\cup s_i\).
 
--   The **reach value**
-    $$R_i = \max\{\text{distance along } s \text{ from } p_{i}^r \text{(the right endpoint of the chain) to } q \text{, the right endpoint of s} }.$$ 
-    In mathematical terms, we write this $R_i = |p_{i}^r q|$
+All these arrays \((|C_i|,L_i,R_i,D_i)\) are computed in two linear
+scans (prefix and suffix) of the path. Total preprocessing cost:
+\(\mathcal{O}(n)\).
 
--   $$L_i = \max\{\text{distance along } s \text{ from } p_{i}^l \text{(the left endpoint of the chain) to } q \text{, the left endpoint of s} }.$$ 
-    In mathematical terms, we write this $L_i = |p_{i}^l p|$
+<h3 class="font-display text-xl font-bold text-left">Distance through the shortcut (intuition)</h3>
 
--   $D_i$ corresponds to the maximum distance between $p_{i}^l$ to its furthest point called $p_{i}^{-l}$ on $C_i$ ∪ $s_i$. We can compute this easily using the semiperimeter of $C_i$ ∪ $s_i$.
+For a chain \(C_i\) with intersection endpoints \(x_i,x_{i+1}\), the
+distance between \(x_i\) and \(x_{i+1}\) along the horizontal shortcut is
+simply \(|x_i x_{i+1}|\). A typical candidate contribution for a chain is
 
-Both arrays $(D_i)$ and $(R_i)$ are computed in overall linear time by
-performing a prefix and suffix sweep on the path.
+\[
+\alpha_i \;=\; \max\{\, D_i + R_i \;,\; |x_i x_{i+1}| + R_i \,\},
+\]
 
-<h3 class="font-display text-xl font-bold text-left">Distance Through the Shortcut</h3>
+where the two terms correspond to (1) staying on the path as far as
+possible, then using the shortcut reach \(R_i\), and (2) jumping across
+the shortcut first then walking along the path. Every real candidate for
+the final diameter is a linear combination of \(|C_i|,L_i,R_i,D_i\).
 
+<h3 class="font-display text-xl font-bold text-left">Three structural cases</h3>
 
-For any chain $C_i$ (with endpoints $x_i$ and $x_{i+1}$), the distance
-between these two points *using the shortcut* is simply
-$$|x_i x_{i+1}| ,$$ their Euclidean distance along the horizontal
-shortcut.\
-The diameter contributions involving the shortcut come from distances of
-a vertex reaching a point on another chain using one crossing of $s$:
-$$\alpha_i = \max\{D_i + R_i,\; |x_i x_{i+1}| + R_i\}.$$
+When combining contributions from two chains \(C_i\) and \(C_j\) the
+relative placements along \(s\) fall into three canonical cases:
 
-Intuitively:
+- **Disjoint chains** (their projections on \(s\) do not overlap).  
+  Candidate value:
+  \[
+  D_i + R_i \;-\; R_j \;-\; |s_j| \;+\; D_j .
+  \]
 
--   $D_i + R_i$ corresponds to staying on the original path.
+- **Nested chains** (one chain's projection is strictly contained in the other).  
+  Candidate value:
+  \[
+  |C_i| - L_i - R_i \;+\; \beta_j, \quad
+  \beta_j = |C_j| + L_j + R_j .
+  \]
 
--   $|x_i x_{i+1}| + R_i$ corresponds to "jumping" across the shortcut
-    and then walking along the path.
+- **Overlapping chains** (projections overlap but none contains the other).  
+  Candidate value:
+  \[
+  |C_i| - L_i + R_i \;+\; \gamma_j, \quad
+  \gamma_j = |C_j| + L_j - R_j .
+  \]
 
-<h3 class="font-display text-xl font-bold text-left">Linear Sweep to Compute the Diameter</h3>
-
-
-The key result is that the diameter of $P \cup s$ is obtained by a
-single left-to-right sweep computing.
-
-There are three different cases:
-- Disjoint case
-- Nested case 
-- Overlapping case
+These algebraic formulas are derived from decomposing the possible shortest
+routes that use at most one crossing of the shortcut. They are local and
+are combined globally by a sweep.
 
 <div align="center" class="my-8 center ">
-<div class="w-full grid grid-cols-3 gap-1 justify-items-center">
-    <p>Disjoint</p>
-    <p>Overlapping</p>
-    <p>Nested</p>
-    <img class="rounded-lg border-2  w-full  max-w-xs border-double h-48" src="../../sections/figures/disjoint.png"/>
-    <img class="rounded-lg border-2  w-full  max-w-xs border-double h-48" src="../../sections/figures/overlapping.png"/>
-    <img class="rounded-lg border-2  w-full  max-w-xs border-double h-48" src="../../sections/figures/nested.png"/>
-
+  <div class="w-full grid grid-cols-3 gap-1 justify-items-center">
+      <p>Disjoint</p>
+      <p>Overlapping</p>
+      <p>Nested</p>
+      <img class="rounded-lg border-2 w-full max-w-xs border-double h-48" src="../../sections/figures/disjoint.png"/>
+      <img class="rounded-lg border-2 w-full max-w-xs border-double h-48" src="../../sections/figures/overlapping.png"/>
+      <img class="rounded-lg border-2 w-full max-w-xs border-double h-48" src="../../sections/figures/nested.png"/>
+  </div>
+  <i class="text-md">Figure: geometric cases between chain projections</i>
 </div>
-    <i class="text-md">Figure 5: Representation of decomposition into chains</i>
 
-</div>
-1. For the disjoint case, we compute the result as the following: $D_i + R_i - R_j - |s_j| + D_j$
+<h3 class="font-display text-xl font-bold text-left">Linear sweep algorithm</h3>
 
-2. For the nested chains, the result is given by $|C_i| - L_i - R_i + beta_j$ with beta = $|C_j| + L_j + R_j$.
+The diameter of \(P\cup s\) can be obtained with a single left-to-right
+sweep along the ordered chains. During the sweep we maintain a small set
+of extremal values (partial maxima) that allow us to evaluate each case
+in constant time per chain:
 
-3. For the overlapping chains, the result is given by $|C_i| - L_i + R_i + gamma_j$ with gamma = $|C_j| + L_j - R_j$.
+- a running maximum of \(\beta_j = |C_j|+L_j+R_j\),
+- a running maximum of \(\gamma_j = |C_j|+L_j-R_j\),
+- a few additional local maxima used for disjoint-case evaluation
+  (depending on the implementation you can keep \(D_j\) +/- shifted
+  terms).
 
-The maximum result found gives us the diameter.
+At step \(i\) the algorithm uses the stored maxima to compute the best
+candidate brought by \(C_i\) interacting with any earlier chain.
+Because every chain is processed once and each update/evaluation costs
+\(\mathcal{O}(1)\), the sweep runs in \(\mathcal{O}(n)\).
 
+The overall structure is:
 
-<h3 class=" font-display text-xl font-bold text-left">Final Complexity</h3>
+1. compute intersections \(x_0,\dots,x_m\) and build chains \(C_0\dots C_m\).
+2. compute \(|C_i|,L_i,R_i,D_i\) for all \(i\) (two linear passes).
+3. left-to-right sweep computing candidate values for the three cases,
+   updating global maxima accordingly.
+4. return the maximum candidate found.
 
+<h3 class="font-display text-xl font-bold text-left">Pseudocode</h3>
 
--   Intersection detection and sorting along a horizontal shortcut:
-    $\mathcal{O}(n)$.
+<pre class="pseudocode">
+function DIAMETER_WITH_HORIZONTAL_SHORTCUT(P, p, q):
+    // STEP 0: preparatory data
+    X = INTERSECTIONS(P, segment(p,q))            // x0..xm sorted by x
+    Chains = BUILD_CHAINS(P, X)                  // C[0..m-1] between x_i and x_i+1
 
--   Chain lengths $D_i$ and reach values $R_i$: $\mathcal{O}(n)$.
+    // STEP 1: precompute metrics
+    for i = 0 .. m-1:
+        Clen[i] = PATH_LENGTH(C[i])
+        pL[i], pR[i] = ENDPOINTS(C[i])
+        L[i] = EUCLIDEAN_DISTANCE(pL[i], p)
+        R[i] = EUCLIDEAN_DISTANCE(pR[i], q)
+        D[i] = INTERNAL_MAX_DISTANCE(C[i], pL[i], segment_part_of_s) 
+                // compute with cumulative distances / semiperimeter trick
+    end for
 
--   Sweep to compute all $\alpha_i$: $\mathcal{O}(n)$.
+    // STEP 2: sweep for diameter
+    best = 0
 
-Therefore,
-$$\mathrm{diam}(P \cup s) \text{ is computed in } \mathcal{O}(n).$$
+    beta_max = -INF        // max of (|Cj| + Lj + Rj)
+    gamma_max = -INF       // max of (|Cj| + Lj - Rj)
+    aux_max_for_disjoint = -INF   // keep necessary D_j-based maxima
 
+    for i = 0 .. m-1:
+        // Evaluate nested case using beta_max
+        if beta_max != -INF:
+            val_nested = Clen[i] - L[i] - R[i] + beta_max
+            best = max(best, val_nested)
+        end if
+
+        // Evaluate overlapping case using gamma_max
+        if gamma_max != -INF:
+            val_overlap = Clen[i] - L[i] + R[i] + gamma_max
+            best = max(best, val_overlap)
+        end if
+
+        // Evaluate disjoint case using aux_max_for_disjoint
+        // (aux_max_for_disjoint stores terms like D_j - R_j - |s_j| + D_j_variant)
+        val_disjoint = D[i] + R[i] + aux_max_for_disjoint
+        best = max(best, val_disjoint)
+
+        // Update running maxima with chain i for future indices
+        beta = Clen[i] + L[i] + R[i]
+        gamma = Clen[i] + L[i] - R[i]
+        beta_max = max(beta_max, beta)
+        gamma_max = max(gamma_max, gamma)
+
+        // Update aux structure for disjoint case:
+        // aux_term = - R[i] - |s_i| + D[i]  (or whichever exact combination used)
+        aux_term = - R[i] - LENGTH_OF_SHORTCUT_PROJ(C[i]) + D[i]
+        aux_max_for_disjoint = max(aux_max_for_disjoint, aux_term)
+    end for
+
+    return best
+</pre>
+
+<h3 class="font-display text-xl font-bold text-left">Correctness sketch</h3>
+
+Every pair of vertices in \(P\cup s\) has a shortest path that uses at
+most one crossing of \(s\). By partitioning the path according to the
+crossings and analyzing how a vertex in chain \(C_i\) can reach vertices
+in other chains with at most one crossing, we reduce the global diameter
+computation to evaluating finite linear expressions per chain. The
+left-to-right sweep enumerates those possibilities implicitly and
+maintains the needed extremal terms—hence correctness.
+
+<h3 class="font-display text-xl font-bold text-left">Complexity</h3>
+
+- Intersection detection and building chains: \(\mathcal{O}(n)\).  
+- Precomputing \(|C_i|,L_i,R_i,D_i\): \(\mathcal{O}(n)\).  
+- Left-to-right sweep (one pass, constant-time updates): \(\mathcal{O}(n)\).
+
+Therefore \(\mathrm{diam}(P\cup s)\) is computed in \(\mathcal{O}(n)\).

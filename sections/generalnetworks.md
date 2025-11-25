@@ -1,5 +1,4 @@
-The paper states that one can always determine in O(n**k) time if the network $N_l$ has an optimal shortcut and compute one.
-
+The paper states that one can always determine in $\cal O(n^k)$ time if the network $N_l$ has an optimal shortcut and compute one.
 
 The pseudo code of the algorithm:
 
@@ -29,4 +28,4 @@ function FIND_OPTIMAL_SHORTCUT(N):
 
 </pre>
 
-This algorithm takes $O(n^{10})$ time. It takes a lot of time because the problem is continuous, we need to try every possible shortcut. 
+This algorithm takes $O(n^{10})$ time. It takes a lot of time because the problem is continuous, we need to try every possible shortcut.

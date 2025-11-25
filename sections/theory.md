@@ -10,11 +10,9 @@ Here we explain the mathematical and conceptual background for the paper's subje
 
   - To evaluate the impact of this shortcut on the network's diameter, we focus on a fixed diametral pair $(\alpha, \beta) \subseteq V(N) \cup E(N)$. Given the line parameters $a$ and $b$, and the corresponding intersection points $w$ and $z$, we define the **shortcut function** :$$f_{w,z}^{\alpha, \beta} (a,b) = ecc(w, \alpha) + path + ecc(z,\beta),$$which quantifies the effect of the shortcut on the distance between $\alpha$ and $\beta$, and thus on the overall network diameter.
 
-There are two types of networks: general networks and path networks. Path networks is a subset of general networks that represent paths, such as the following image:
+There are two types of networks: general networks and path networks. Path networks are a subset of general networks that represent paths, such as the following image:
 
 <div align="center" class="my-8 center ">
   <img class="rounded-lg border-2 w-full  max-w-xs border-double" src="../../sections/figures/pathnetworks.png"  />
   <caption class="m-px italic font-sans antialiased text-xs text-current mt-2 block text-center">Figure 4: Example of path network</caption>
 </div>
-
-

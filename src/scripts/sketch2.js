@@ -260,74 +260,66 @@ const s2 = (sketch) => {
         sj = 0
       }
           
-      let j = i + 1;
-
+      for (let j = i + 1;j < chains.length; j ++ ){
 
       // FIRST CASE: Disjoint chain
-      
-      console.log("i: ", i)
-      if ((j > chains.length - 1) || ( chains[j][0].x >= chain[chain.length - 1].x))  {
-        console.log("disjoint chain")
-                
-        
-        let second_chain = chains[j];
+        console.log("i: ", i)
+        if ((j > chains.length - 1) || ( chains[j][0].x >= chain[chain.length - 1].x))  {
+          console.log("disjoint chain")
+                  
+          let second_chain = chains[j];
 
-        let p_r2 = second_chain[second_chain.length - 1]; // priq
-        let p_l2 = second_chain[0]; // priq
+          let p_r2 = second_chain[second_chain.length - 1]; // priq
+          let p_l2 = second_chain[0]; // priq
 
-        let Lj = euclidian_distance(p_l2, shortcut[0]);
-        let Rj = euclidian_distance(p_r2, shortcut[1]);
-        let Cj = calculateperimeter(second_chain, false);
-        let Dj = calculateperimeter(second_chain, true) / 2;
+          let Lj = euclidian_distance(p_l2, shortcut[0]);
+          let Rj = euclidian_distance(p_r2, shortcut[1]);
+          let Cj = calculateperimeter(second_chain, false);
+          let Dj = calculateperimeter(second_chain, true) / 2;
 
-        let sj = euclidian_distance(p_l2, p_r2)
+          let sj = euclidian_distance(p_l2, p_r2)
 
-        // handle degenerate case
-        if (j == chains.length - 1 && !(p_r2.y == shortcut[1].y && p_r2.x == shortcut[1].x)){
-          console.log("here")
-          Dj = Cj // real perimeter
-          Rj = euclidian_distance(p_l2, shortcut[1]);
-          sj = 0
+          // handle degenerate case
+          if (j == chains.length - 1 && !(p_r2.y == shortcut[1].y && p_r2.x == shortcut[1].x)){
+            Dj = Cj // real perimeter
+            Rj = euclidian_distance(p_l2, shortcut[1]);
+            sj = 0
+          }
+
+          let alpha = Di + Ri - Rj - sj + Dj;
+
+          if (alpha > max_alpha) {
+            max_alpha = alpha;
+            max_alpha_index = i;
+          }
         }
-        console.log("Ri: ", Ri, " Rj: ", Rj, "sj: ", sj )
 
-        let alpha = Di + Ri - Rj - sj + Dj;
+        // SECOND CASE: Nested chain
 
-        if (alpha > max_alpha) {
-          max_alpha = alpha;
-          max_alpha_index = i;
+        if  (j < chains.length && chains[j][0].x < chain[chain.length - 1].x && chains[j][chains[j].length - 1].x < chain[chain.length - 1].x ){
+          
+          let second_chain = chains[j]
+
+          let p_l2 = second_chain[0]; // priq
+          let p_r2 = second_chain[second_chain.length - 1]; // priq
+
+          let Lj = euclidian_distance(p_l2, shortcut[0]);
+          let Rj = euclidian_distance(p_r2, shortcut[1]);
+          let Cj = calculateperimeter(second_chain, false);
+
+          let beta = Cj + Lj + Rj;
+          let result = (Ci - Li - Ri + beta) / 2
+
+
+          if (result > max_alpha) {
+            max_alpha = result;
+            max_alpha_index = i;
+          }
+
         }
-      }
-
-      // SECOND CASE: Nested chain
-
-      while  (j < chains.length && chains[j][0].x < chain[chain.length - 1].x && chains[j][chains[j].length - 1].x < chain[chain.length - 1].x ){
-        console.log("nested chain")
-        
-        let second_chain = chains[j]
-
-        let p_l2 = second_chain[0]; // priq
-        let p_r2 = second_chain[second_chain.length - 1]; // priq
-
-        let Lj = euclidian_distance(p_l2, shortcut[0]);
-        let Rj = euclidian_distance(p_r2, shortcut[1]);
-        let Cj = calculateperimeter(second_chain, false);
-
-        let beta = Cj + Lj + Rj;
-        let result = (Ci - Li - Ri + beta) / 2
-
-
-        if (result > max_alpha) {
-          max_alpha = result;
-          max_alpha_index = i;
-        }
-      j++;
-
-    }
 
     // THREE CASE: Overlapping case
-      while  (j < chains.length && chains[j][0].x < chain[chain.length - 1].x && chains[j][chains[j].length - 1].x > chain[chain.length - 1].x ){
-        console.log("overlapping chain")
+      if  (j < chains.length && chains[j][0].x < chain[chain.length - 1].x && chains[j][chains[j].length - 1].x > chain[chain.length - 1].x ){
         
         let second_chain = chains[j]
 
@@ -345,9 +337,9 @@ const s2 = (sketch) => {
           max_alpha = result;
           max_alpha_index = i;
         }
-      j++;
        }
-      i = j;
+
+    }
 
       }
     return max_alpha;

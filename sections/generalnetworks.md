@@ -6,9 +6,9 @@ Specifically, we present an algorithm that, in polynomial time, determines wheth
 
 The core of the proof involves two main steps:
 
-Region Decomposition: We begin by dividing the network into a polynomial number of "equivalent regions." This allows us to break down the problem into smaller, more manageable parts.
+- 1. Region Decomposition: We begin by dividing the network into a polynomial number of "equivalent regions." This allows us to break down the problem into smaller, more manageable parts.
 
-Shortcut Search within Regions: Within each region, we search for a simple shortcut. The calculation of the network's diameter, which is used to measure the performance improvement of the shortcut, is done differently depending on the characteristics of the "diametral points" (the points that define the longest paths) within that region.
+- 2. Shortcut Search within Regions: Within each region, we search for a simple shortcut. The calculation of the network's diameter, which is used to measure the performance improvement of the shortcut, is done differently depending on the characteristics of the "diametral points" (the points that define the longest paths) within that region.
 
 
 We made a pseudo code of the algorithm:

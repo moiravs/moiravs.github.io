@@ -1,3 +1,5 @@
+// Inspired by https://www.geeksforgeeks.org/css/create-an-interactive-quiz-form-in-tailwind-css/
+
 class Quiz {
 	constructor() {
 		this.currentQuestionIndex = 0;

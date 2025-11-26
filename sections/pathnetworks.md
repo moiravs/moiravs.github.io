@@ -79,7 +79,7 @@ distance between $x_i$ and $x_{i+1}$ along the horizontal shortcut is
 simply $|x_i x_{i+1}|$. A typical candidate contribution for a chain is
 
 $
-\alpha_i \;=\; \max\{\, D_i + R_i \;,\; |x_i x_{i+1}| + R_i \,\},
+\alpha_i = \max\{D_i + R_i , |x_i x_{i+1}| + R_i \},
 $
 
 where the two terms correspond to (1) staying on the path as far as

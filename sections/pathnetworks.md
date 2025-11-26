@@ -8,26 +8,26 @@ along that embedding.
 
 <h3 class="font-display text-xl font-bold text-left">Problem and goal</h3>
 
-We consider a polygonal path \(P=(v_0,\dots,v_n)\) embedded in the plane
-and a horizontal shortcut \(s=pq\) with \(p\) left of \(q\). Our task
-is to compute the diameter of the augmented network \(P\cup s\),
-\(\mathrm{diam}(P\cup s)\), in \(\mathcal{O}(n)\) time once the
-intersection points between \(s\) and \(P\) are known.
+We consider a polygonal path $P=(v_0,\dots,v_n)$ embedded in the plane
+and a horizontal shortcut $s=pq$ with $p$ left of $q$. Our task
+is to compute the diameter of the augmented network $P \cup s$,
+$\mathrm{diam}(P \cup s)$, in $\mathcal{O}(n)$ time once the
+intersection points between $s$ and $P$ are known.
 
 <h3 class="font-display text-xl font-bold text-left">Structure of the path and intersection points</h3>
 
-Let the drawing of the path be \(P'\). The horizontal segment \(s\)
-meets \(P'\) in a finite, left-to-right ordered list of points
-\[
+Let the drawing of the path be $P'$. The horizontal segment $s$
+meets $P'$ in a finite, left-to-right ordered list of points
+$
 x_0,x_1,\dots,x_m
-\]
-(sorted by \(x\)-coordinate). These intersections partition the path
+$
+(sorted by $x$-coordinate). These intersections partition the path
 into chains
-\[
+$
 C_0,C_1,\dots,C_m,
-\]
-where each chain \(C_i\) is the subpath of \(P\) between \(x_i\) and
-\(x_{i+1}\) (the extremal chains may be open on one side).
+$
+where each chain $C_i$ is the subpath of $P$ between $x_i$ and
+$x_{i+1}$ (the extremal chains may be open on one side).
 
 <div align="center" class="my-8 center ">
   <img class="rounded-lg border-2 w-full max-w-xs border-double" src="../../sections/figures/chain.png"  />
@@ -36,77 +36,71 @@ where each chain \(C_i\) is the subpath of \(P\) between \(x_i\) and
 
 <h3 class="font-display text-xl font-bold text-left">Precomputations</h3>
 
-For each chain \(C_i\) we compute and store the following values:
+For each chain $C_i$ we compute and store the following values:
 
-- **Left endpoint** \(p_i^l\) and **right endpoint** \(p_i^r\).  
+- **Left endpoint** $p_i^l$ and **right endpoint** $p_i^r$.  
 - **Chain length**  
-  \[
+  $
   |C_i| = \text{length of the path segment from } p_i^l \text{ to } p_i^r.
-  \]
-  (For \(C_0\) and \(C_m\) this equals the prefix/suffix lengths.)
+  $
+  (For $C_0$ and $C_m$ this equals the prefix/suffix lengths.)
 
 - **Right reach**  
-  \[
+  $
   R_i = |p_i^r q|
-  \]
-  (distance along the shortcut from the chain's right endpoint to \(q\)).
+  $
+  (distance along the shortcut from the chain's right endpoint to $q$).
 
 - **Left reach**  
-  \[
+  $
   L_i = |p_i^l p|.
-  \]
+  $
 
 - **Internal contributor**  
-  \[
+  $
   D_i = \max\{\text{distance from } p_i^l \text{ to any point of } C_i\cup s_i\},
-  \]
+  $
   i.e. the farthest distance reachable inside the chain (and its local
   shortcut segment). This can be computed using cumulative lengths and
-  the semiperimeter trick for the cycle \(C_i\cup s_i\).
+  the semiperimeter trick for the cycle $C_i \cup s_i$.
 
-All these arrays \((|C_i|,L_i,R_i,D_i)\) are computed in two linear
+All these arrays $(|C_i|,L_i,R_i,D_i)$ are computed in two linear
 scans (prefix and suffix) of the path. Total preprocessing cost:
-\(\mathcal{O}(n)\).
+$\mathcal{O}(n)$.
 
 <h3 class="font-display text-xl font-bold text-left">Distance through the shortcut (intuition)</h3>
 
-For a chain \(C_i\) with intersection endpoints \(x_i,x_{i+1}\), the
-distance between \(x_i\) and \(x_{i+1}\) along the horizontal shortcut is
-simply \(|x_i x_{i+1}|\). A typical candidate contribution for a chain is
+For a chain $C_i$ with intersection endpoints $x_i,x_{i+1}$, the
+distance between $x_i$ and $x_{i+1}$ along the horizontal shortcut is
+simply $|x_i x_{i+1}|$. A typical candidate contribution for a chain is
 
-\[
+$
 \alpha_i \;=\; \max\{\, D_i + R_i \;,\; |x_i x_{i+1}| + R_i \,\},
-\]
+$
 
 where the two terms correspond to (1) staying on the path as far as
-possible, then using the shortcut reach \(R_i\), and (2) jumping across
+possible, then using the shortcut reach $R_i$, and (2) jumping across
 the shortcut first then walking along the path. Every real candidate for
-the final diameter is a linear combination of \(|C_i|,L_i,R_i,D_i\).
+the final diameter is a linear combination of $|C_i|,L_i,R_i,D_i$.
 
 <h3 class="font-display text-xl font-bold text-left">Three structural cases</h3>
 
-When combining contributions from two chains \(C_i\) and \(C_j\) the
-relative placements along \(s\) fall into three canonical cases:
+When combining contributions from two chains $C_i$ and $C_j$ the
+relative placements along $s$ fall into three canonical cases:
 
-- **Disjoint chains** (their projections on \(s\) do not overlap).  
+- **Disjoint chains** (their projections on $s$ do not overlap).  
   Candidate value:
-  \[
-  D_i + R_i \;-\; R_j \;-\; |s_j| \;+\; D_j .
-  \]
+  $D_i + R_i \;-\; R_j \;-\; |s_j| \;+\; D_j$.
 
 - **Nested chains** (one chain's projection is strictly contained in the other).  
   Candidate value:
-  \[
-  |C_i| - L_i - R_i \;+\; \beta_j, \quad
-  \beta_j = |C_j| + L_j + R_j .
-  \]
+  $|C_i| - L_i - R_i \;+\; \beta_j, \quad
+  \beta_j = |C_j| + L_j + R_j$.
 
 - **Overlapping chains** (projections overlap but none contains the other).  
   Candidate value:
-  \[
-  |C_i| - L_i + R_i \;+\; \gamma_j, \quad
-  \gamma_j = |C_j| + L_j - R_j .
-  \]
+  $|C_i| - L_i + R_i \;+\; \gamma_j, \quad
+  \gamma_j = |C_j| + L_j - R_j$.
 
 These algebraic formulas are derived from decomposing the possible shortest
 routes that use at most one crossing of the shortcut. They are local and
@@ -126,26 +120,26 @@ are combined globally by a sweep.
 
 <h3 class="font-display text-xl font-bold text-left">Linear sweep algorithm</h3>
 
-The diameter of \(P\cup s\) can be obtained with a single left-to-right
+The diameter of $P \cup s$ can be obtained with a single left-to-right
 sweep along the ordered chains. During the sweep we maintain a small set
 of extremal values (partial maxima) that allow us to evaluate each case
 in constant time per chain:
 
-- a running maximum of \(\beta_j = |C_j|+L_j+R_j\),
-- a running maximum of \(\gamma_j = |C_j|+L_j-R_j\),
+- a running maximum of $\beta_j = |C_j|+L_j+R_j$,
+- a running maximum of $\gamma_j = |C_j|+L_j-R_j$,
 - a few additional local maxima used for disjoint-case evaluation
-  (depending on the implementation you can keep \(D_j\) +/- shifted
+  (depending on the implementation you can keep $D_j$ +/- shifted
   terms).
 
-At step \(i\) the algorithm uses the stored maxima to compute the best
-candidate brought by \(C_i\) interacting with any earlier chain.
+At step $i$ the algorithm uses the stored maxima to compute the best
+candidate brought by $C_i$ interacting with any earlier chain.
 Because every chain is processed once and each update/evaluation costs
-\(\mathcal{O}(1)\), the sweep runs in \(\mathcal{O}(n)\).
+$\mathcal{O}(1)$, the sweep runs in $\mathcal{O}(n)$.
 
 The overall structure is:
 
-1. compute intersections \(x_0,\dots,x_m\) and build chains \(C_0\dots C_m\).
-2. compute \(|C_i|,L_i,R_i,D_i\) for all \(i\) (two linear passes).
+1. compute intersections $x_0,\dots,x_m$ and build chains $C_0\dots C_m$.
+2. compute $|C_i|,L_i,R_i,D_i$ for all $i$ (two linear passes).
 3. left-to-right sweep computing candidate values for the three cases,
    updating global maxima accordingly.
 4. return the maximum candidate found.
@@ -210,9 +204,9 @@ function DIAMETER_WITH_HORIZONTAL_SHORTCUT(P, p, q):
 
 <h3 class="font-display text-xl font-bold text-left">Correctness sketch</h3>
 
-Every pair of vertices in \(P\cup s\) has a shortest path that uses at
-most one crossing of \(s\). By partitioning the path according to the
-crossings and analyzing how a vertex in chain \(C_i\) can reach vertices
+Every pair of vertices in $(P \cup s)$ has a shortest path that uses at
+most one crossing of $s$. By partitioning the path according to the
+crossings and analyzing how a vertex in chain $C_i$ can reach vertices
 in other chains with at most one crossing, we reduce the global diameter
 computation to evaluating finite linear expressions per chain. The
 left-to-right sweep enumerates those possibilities implicitly and
@@ -220,8 +214,8 @@ maintains the needed extremal terms—hence correctness.
 
 <h3 class="font-display text-xl font-bold text-left">Complexity</h3>
 
-- Intersection detection and building chains: \(\mathcal{O}(n)\).  
-- Precomputing \(|C_i|,L_i,R_i,D_i\): \(\mathcal{O}(n)\).  
-- Left-to-right sweep (one pass, constant-time updates): \(\mathcal{O}(n)\).
+- Intersection detection and building chains: $\mathcal{O}(n)$.
+- Precomputing ($|C_i|,L_i,R_i,D_i$): $\mathcal{O}(n)$.  
+- Left-to-right sweep (one pass, constant-time updates): $\mathcal{O}(n)$.
 
-Therefore \(\mathrm{diam}(P\cup s)\) is computed in \(\mathcal{O}(n)\).
+Therefore $\mathrm{diam}(P \cup s)$ is computed in $\mathcal{O}(n)$.

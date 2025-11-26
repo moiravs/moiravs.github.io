@@ -1,10 +1,14 @@
-<h3 class="font-display text-xl font-bold text-left">Path networks (reminder)</h3>
+
+
 
 Path networks are the simplest non-trivial geometric networks: a sequence
 of vertices connected by edges with no branching. Every internal vertex
 has degree two and the endpoints have degree one. Geometrically the path
 is a single polyline (polygonal chain) and all distances are measured
 along that embedding.
+
+<h2 class="font-display text-2xl font-bold text-left">Diameter after inserting a shortcut</h2>
+
 
 <h3 class="font-display text-xl font-bold text-left">Problem and goal</h3>
 
@@ -219,3 +223,14 @@ maintains the needed extremal terms—hence correctness.
 - Left-to-right sweep (one pass, constant-time updates): $\mathcal{O}(n)$.
 
 Therefore $\mathrm{diam}(P \cup s)$ is computed in $\mathcal{O}(n)$.
+
+<h2 class="font-display text-2xl font-bold text-left">Finding optimal shortcut</h2>
+
+The paper explores two types of optimal shortcuts: the optimal horizontal shortcuts and the optimal simple shortcuts.
+
+The optimal horizontal shortcut algorithm finds a shortcut using the y-coordinate of the vertices. It can be found in $O(n² log n)$ time using O(n²) space where $n$ is the number of vertices. After a simple rotation, this algorithm allows to find an optimal shortcut in any direction.
+
+The optimal simple shortcut algorithm restrict the shortcuts whose interior (which means that the endpoints are excluded) does not intersect $N_l$. The algorithm decide if a path $P_l$ has an optimal shortcut and computes one in $O(n²)$.
+
+
+

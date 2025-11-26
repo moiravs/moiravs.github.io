@@ -94,16 +94,16 @@ relative placements along $s$ fall into three canonical cases:
 
 - **Disjoint chains** (their projections on $s$ do not overlap).  
   Candidate value:
-  $D_i + R_i \;-\; R_j \;-\; |s_j| \;+\; D_j$.
+  $D_i + R_i - R_j - |s_j| + D_j$.
 
 - **Nested chains** (one chain's projection is strictly contained in the other).  
   Candidate value:
-  $|C_i| - L_i - R_i \;+\; \beta_j, \quad
+  $|C_i| - L_i - R_i + \beta_j, \quad
   \beta_j = |C_j| + L_j + R_j$.
 
 - **Overlapping chains** (projections overlap but none contains the other).  
   Candidate value:
-  $|C_i| - L_i + R_i \;+\; \gamma_j, \quad
+  $|C_i| - L_i + R_i + \gamma_j, \quad
   \gamma_j = |C_j| + L_j - R_j$.
 
 These algebraic formulas are derived from decomposing the possible shortest

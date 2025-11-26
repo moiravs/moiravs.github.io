@@ -50,10 +50,10 @@
 				<div id="abstract-content" class="text-left prose mx-auto text-center"></div>
 			</section>
 
-			<!-- <section id="background" class="text-left space-y-8">
+			<section id="background" class="text-left space-y-8">
 				<h2 class="text-3xl font-bold">Background</h2>
 				<p id="background-content" class="text-left prose mx-auto text-center"></p>
-			</section> -->
+			</section>
 
 			<section id="theory" class="text-left space-y-8">
 				<h2 class="text-3xl font-bold text-left">Theory & Explanation</h2>
@@ -71,6 +71,14 @@
 				<div id="pathnetworks-content" class="text-left prose mx-auto text-center"></div>
 			</section>
 
+			<section class="text-left space-y-8">
+				<h2 class="text-3xl font-bold text-left">What we implemented</h2>
+				<div class="text-left prose mx-auto text-center">
+
+					We implemented the algorithm to compute the diameter in $O(n)$ after inserting a shortcut.
+				</div>
+			</section>
+
 			<section id="sketches" class="space-y-6">
 				<h2 class="text-3xl font-semibold text-center text-left">
 					Sketches Path Network
@@ -81,7 +89,7 @@
 					<div class="border rounded-lg bg-white p-4">
 						<div class="max-w-5xl w-full justify-center items-center">
 							<h1 class="text-3xl font-bold text-center text-gray-800 mb-6">
-								Sketch 2 — Particles
+								Sketch 1
 							</h1>
 							<h1 id="error" class="text-3xl font-bold text-center text-red-800 mb-6"></h1>
 
@@ -99,11 +107,6 @@
 											<li><button type="button"
 													class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
 													onclick="sketch2.switchShortcutMode()">Add ShortCut</button>
-											</li>
-											<li><button type="button"
-													class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
-													onclick="sketch2.computeOptimalShortcut()">Compute Optimal
-													Shortcut</button>
 											</li>
 
 										</ul>
@@ -280,6 +283,25 @@
 							networks,”
 							<i>European Journal of Operational Research</i>, vol. 279, no. 1, pp. 26–37, 2019, doi:
 							<a href="url">https://doi.org/10.1016/j.ejor.2019.05.018 </a>.
+						</p>
+
+						<p id="ulrike"> [2] Ulrike Große, Joachim Gudmundsson, Christian Knauer, Michiel Smid, and
+							Fabian Stehn.
+							Fast algorithms for diameter-optimally augmenting paths. <i>In 42nd International Colloquium
+								on Automata, Languages, and Programming (ICALP 2015)</i>, pages 678–688, 2015.
+						</p>
+
+						<p id="ulrike"> [3] J. L. De Carufel, C. Grimm, A. Maheshwari, and M. Smid. Minimizing the
+							continuous
+							diameter when augmenting paths and cycles with shortcuts. In <i>15th Scandinavian Sym
+								posium and Workshops on Algorithm Theory, SWAT 2016, June 22-24, 2016, Reykjavik,
+								Iceland </i>, pages 27:1–27:14, 2016
+						</p>
+						<p id="grimm">
+
+							J. L. De Carufel, C. Grimm, S. Schirra, and M. Smid. Minimizing the continuous
+							diameter when augmenting a tree with a shortcut. In <i>Algorithms and Data Structures.
+								WADS 2017. LNCS 10389,</i> pages 301– 312, 2017
 						</p>
 					</li>
 				</ol>

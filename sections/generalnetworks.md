@@ -1,4 +1,4 @@
-- The _locus_ of the network, denoted $N_l$, is the set of all points **contained** in the network, including vertices and all points along edges : $$N_l = V(N) \cup \bigcup_{e \in E(N)} \{p_e\},$$where $p_e$ represents any point along edge $e$.
+
 
 The paper states that one can always determine in $\cal O(n^k)$ time if the network $N_l$ has an optimal shortcut and compute one.
 

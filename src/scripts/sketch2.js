@@ -242,6 +242,15 @@ const s2 = (sketch) => {
   const computeDiameterWithShortcut = (chains) => {
     let max_alpha = 0;
     let max_alpha_index = 0;
+    if (chains.length == 1){
+      let chain = chains[0];
+
+      let p_r = chain[ chain.length - 1]; // priq
+
+      let Ri = euclidian_distance(p_r, shortcut[1]);
+      let Di = calculateperimeter(chain, true) / 2;
+      return Di + Ri
+    }
     for (let i = 0; i < chains.length - 1; i++) {
       let chain = chains[i];
       let p_l = chain[0]; // priq

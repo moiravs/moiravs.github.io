@@ -35,7 +35,7 @@ $x_{i+1}$ (the extremal chains may be open on one side).
 
 <div align="center" class="my-8 center ">
   <img class="rounded-lg border-2 w-full max-w-xs border-double" src="../../sections/figures/chain.png"  />
-  <i class="text-md">Figure: chains induced by the shortcut</i>
+  <i class="text-md">Figure 5: chains induced by the shortcut</i>
 </div>
 
 <h3 class="font-display text-xl font-bold text-left">Precomputations</h3>
@@ -67,6 +67,11 @@ For each chain $C_i$ we compute and store the following values:
   i.e. the farthest distance reachable inside the chain (and its local
   shortcut segment). This can be computed using cumulative lengths and
   the semiperimeter trick for the cycle $C_i \cup s_i$.
+
+<div align="center" class="my-8 center ">
+  <img class="rounded-lg border-2 w-full max-w-md border-double" src="../../sections/figures/parameters.png"  />
+  <i class="text-md">Figure 6: Parameters represented</i>
+</div>
 
 All these arrays $(|C_i|,L_i,R_i,D_i)$ are computed in two linear
 scans (prefix and suffix) of the path. Total preprocessing cost:
